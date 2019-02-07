@@ -1,2 +1,2 @@
-# tounaBot
+# tournaBot
 Tourament bot Lambda for slack
