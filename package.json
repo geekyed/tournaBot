@@ -1,0 +1,14 @@
+{
+  "name": "tournabot",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "clean": "rm -f tournaBot.zip",
+    "deploy": "yarn zip && aws lambda update-function-code --function-name tournaBot --zip-file fileb://./tournaBot.zip",
+    "zip": "yarn clean && bestzip tournaBot.zip ./*"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.351.0",
+    "bestzip": "^2.1.2"
+  }
+}
