@@ -1,23 +1,27 @@
 const commandParser = require('./src/commandParser')
 const tournament = require('./src/dataAccess/tournament')
+const currentTournament = require('./src/dataAccess/currentTournament')
 
-const commandRunners = [ tournament ]
+// const commandRunners = [tournament, currentTournament]
 
 exports.handler = async (event) => {
   const eventText = JSON.stringify(event, null, 2)
   console.log('Received event:', eventText)
 
-  const { command, err } = commandParser.parse(event)
+  const { command, err } = await commandParser.parse(event)
 
   if (err) return createErrorResponse(`Error: ${err}, Command sent: ${event.text}`)
 
-  console.log(JSON.stringify(command))
-
   let result = null
+  try {
+    // await commandRunners.foreach(async runner => { if (!result) result = await runner.execute(command) })
+    if (!result) result = await tournament.execute(command)
+    if (!result) result = await currentTournament.execute(command)
+  } catch (error) {
+    return createErrorResponse(error)
+  }
 
-  commandRunners.forEach(runner => { if (!result) result = runner.execute(command) })
-
-  if (!result) return helpText(command)
+  if (!result) return createHelpResponse(command.help)
 
   return createSuccessResponse(result)
 }
@@ -38,7 +42,7 @@ const createErrorResponse = (err) => {
 
 const createSuccessResponse = (message) => {
   return {
-    response_type: 'ephemeral',
+    response_type: 'in_channel',
     attachments: [
       {
         color: 'good',
@@ -49,9 +53,18 @@ const createSuccessResponse = (message) => {
       }
     ] }
 }
-const helpText = (command) => {
+
+const createHelpResponse = (message) => {
   return {
-    text: command.help,
-    response_type: 'ephemeral'
-  }
+    response_type: 'ephemeral',
+    attachments: [
+      {
+        color: 'good',
+        title: 'tourneyBot help',
+        text: message,
+        fallback: message,
+        footer: `tourneyBot`,
+        ts: Date.now() / 1000
+      }
+    ] }
 }
