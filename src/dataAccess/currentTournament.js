@@ -1,21 +1,15 @@
 const AWS = require('aws-sdk')
 const documentDB = new AWS.DynamoDB.DocumentClient()
 
-const execute = async (command) => {
-  if (!command.setCurrent) return
-
-  return setCurrentTournament(command.setCurrent)
-}
-
-const setCurrentTournament = async (currentTournament) => {
+const execute = async (data) => {
   const params = {
-    TableName: 'tournaBot-currentTournament',
+    TableName: 'tournaBot-data',
     Key: {
-      channelID: currentTournament.channelID
+      channelID: data.channelID
     },
     UpdateExpression: 'set tournamentName = :tournamentName',
     ExpressionAttributeValues: {
-      ':tournamentName': currentTournament.tournamentName
+      ':tournamentName': data.tournamentName
     },
     ReturnValues: 'UPDATED_NEW'
   }
@@ -25,7 +19,7 @@ const setCurrentTournament = async (currentTournament) => {
   await documentDB.update(params, (err) => { error = err }).promise()
   if (error) return { err: error }
 
-  return { result: `${currentTournament.tournamentName} is now the current tournament in this channel.` }
+  return { result: `${data.tournamentName} is now the current tournament in this channel.` }
 }
 
 module.exports = { execute }

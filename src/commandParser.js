@@ -11,7 +11,7 @@ const parse = async (event) => {
     case 'players':
       return parsePlayers(parameters)
     default:
-      return { command: { help: { responseURL: event.response_url }, type: 'help' } }
+      return { type: 'help', data: { responseURL: event.response_url } }
   }
 }
 
@@ -22,14 +22,14 @@ const stripCommand = (text) => {
 }
 
 const parsePlayers = (parameters) => {
-  return { command: { players: parameters, type: 'players' } }
+  return { type: 'players', data: { players: parameters } }
 }
 
 const parseCurrent = (parameters, channelID) => {
   try {
-    return { command: { setCurrent: { tournamentName: parameters[0], channelID }, type: 'current' } }
+    return { type: 'current', data: { tournamentName: parameters[0], channelID } }
   } catch (err) {
-    return { command: null, err: 'current command invalid try: /tourneyBot current mytournament' }
+    return { err: 'current command invalid try: /tourneyBot current mytournament' }
   }
 }
 
@@ -40,12 +40,12 @@ const parseNew = (parameters) => {
     name = parameters[0]
     rounds = parameters[parameters.findIndex(param => param === 'rounds') - 1]
 
-    if (!isNormalInteger(rounds) || rounds < 3) return { command: null, err: 'rounds not found or too small.' }
-    if (!/\S/.test(name)) return { command: null, err: 'name not found' }
+    if (!isNormalInteger(rounds) || rounds < 3) return { err: 'rounds not found or too small.' }
+    if (!/\S/.test(name)) return { err: 'name not found' }
   } catch (err) {
-    return { command: null, err: 'new command invalid try: /tourneyBot new -n mytournament -r 4' }
+    return { err: 'new command invalid try: /tourneyBot new -n mytournament -r 4' }
   }
-  return { command: { tournament: { create: { name, rounds } }, type: 'new' }, err: null }
+  return { type: 'new', data: { name, rounds } }
 }
 
 const isNormalInteger = (str) => {

@@ -1,10 +1,10 @@
 const commandParser = require('./src/commandParser')
-const tournament = require('./src/dataAccess/tournament')
+const newTournament = require('./src/dataAccess/newTournament')
 const currentTournament = require('./src/dataAccess/currentTournament')
 const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/response')
 
 const commandRunners = {
-  'new': tournament,
+  'new': newTournament,
   'current': currentTournament
 }
 
@@ -12,12 +12,12 @@ exports.handler = async (event) => {
   const eventText = JSON.stringify(event, null, 2)
   console.log('Received event:', eventText)
 
-  let { command, err } = await commandParser.parse(event)
+  let { type, data, err } = await commandParser.parse(event)
   if (err) return handleError(err, event)
 
-  if (command.type === 'help') return createHelpResponse()
+  if (type === 'help') return createHelpResponse()
 
-  let { result, runnerErr } = await commandRunners[command.type].execute(command)
+  let { result, runnerErr } = await commandRunners[type].execute(data)
   if (err) return handleError(runnerErr, event)
 
   return createSuccessResponse(result)
