@@ -1,6 +1,3 @@
-const help = `new, create a new tournament e.g. /tournaBot new myTourna 3 rounds \n
-current, set the current tournament e.g. /tournaBot current myTourna\n
-players, add new players e.g. /tournaBot players Ed Andy Tom Kevin Ashar Gabor David Roni\n`
 
 const parse = async (event) => {
   const command = event.text.split(' ')[0]
@@ -14,7 +11,7 @@ const parse = async (event) => {
     case 'players':
       return parsePlayers(parameters)
     default:
-      return { command: { help: help }, err: null }
+      return { command: { help: { responseURL: event.response_url }, type: 'help' } }
   }
 }
 
@@ -25,12 +22,12 @@ const stripCommand = (text) => {
 }
 
 const parsePlayers = (parameters) => {
-  return { command: { players: parameters } }
+  return { command: { players: parameters, type: 'players' } }
 }
 
 const parseCurrent = (parameters, channelID) => {
   try {
-    return { command: { setCurrent: { tournamentName: parameters[0], channelID } } }
+    return { command: { setCurrent: { tournamentName: parameters[0], channelID }, type: 'current' } }
   } catch (err) {
     return { command: null, err: 'current command invalid try: /tourneyBot current mytournament' }
   }
@@ -48,7 +45,7 @@ const parseNew = (parameters) => {
   } catch (err) {
     return { command: null, err: 'new command invalid try: /tourneyBot new -n mytournament -r 4' }
   }
-  return { command: { tournament: { create: { name, rounds } } }, err: null }
+  return { command: { tournament: { create: { name, rounds } }, type: 'new' }, err: null }
 }
 
 const isNormalInteger = (str) => {

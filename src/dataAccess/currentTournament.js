@@ -20,8 +20,12 @@ const setCurrentTournament = async (currentTournament) => {
     ReturnValues: 'UPDATED_NEW'
   }
   console.log(`SETTING CURRENT TOURNAMENT: ${JSON.stringify(params)}`)
-  await documentDB.update(params, (err) => { console.log(err) }).promise()
-  return `${currentTournament.tournamentName} is now the current tournament in this channel.`
+
+  let error = null
+  await documentDB.update(params, (err) => { error = err }).promise()
+  if (error) return { err: error }
+
+  return { result: `${currentTournament.tournamentName} is now the current tournament in this channel.` }
 }
 
 module.exports = { execute }
