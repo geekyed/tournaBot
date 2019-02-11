@@ -20,7 +20,7 @@ const createTournament = async (newTournament) => {
   }
 
   console.log(`SAVING NEW TOURNAMENT: ${JSON.stringify(params)}`)
-  await documentDB.put(params).promise()
+  await documentDB.put(params, (err) => { console.log(err) }).promise()
   return `${name} tournament started, with ${rounds} rounds.`
 }
 

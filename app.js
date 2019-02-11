@@ -2,8 +2,6 @@ const commandParser = require('./src/commandParser')
 const tournament = require('./src/dataAccess/tournament')
 const currentTournament = require('./src/dataAccess/currentTournament')
 
-// const commandRunners = [tournament, currentTournament]
-
 exports.handler = async (event) => {
   const eventText = JSON.stringify(event, null, 2)
   console.log('Received event:', eventText)
@@ -14,7 +12,6 @@ exports.handler = async (event) => {
 
   let result = null
   try {
-    // await commandRunners.foreach(async runner => { if (!result) result = await runner.execute(command) })
     if (!result) result = await tournament.execute(command)
     if (!result) result = await currentTournament.execute(command)
   } catch (error) {

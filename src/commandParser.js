@@ -1,5 +1,6 @@
-const help = `new, create a new tournament e.g. /tournaBot new -n <myTourna>, -r <3>\n
-current, set the current tournament e.g. /tournaBot current <myTourna>\n`
+const help = `new, create a new tournament e.g. /tournaBot new myTourna 3 rounds \n
+current, set the current tournament e.g. /tournaBot current myTourna\n
+players, add new players e.g. /tournaBot players Ed Andy Tom Kevin Ashar Gabor David Roni\n`
 
 const parse = async (event) => {
   const command = event.text.split(' ')[0]
@@ -7,9 +8,11 @@ const parse = async (event) => {
 
   switch (command) {
     case 'new':
-      return parseNewTournament(parameters)
+      return parseNew(parameters)
     case 'current':
-      return parseCurrentTournament(parameters, event.channel_id)
+      return parseCurrent(parameters, event.channel_id)
+    case 'players':
+      return parsePlayers(parameters)
     default:
       return { command: { help: help }, err: null }
   }
@@ -21,7 +24,11 @@ const stripCommand = (text) => {
   return parameters
 }
 
-const parseCurrentTournament = (parameters, channelID) => {
+const parsePlayers = (parameters) => {
+  return { command: { players: parameters } }
+}
+
+const parseCurrent = (parameters, channelID) => {
   try {
     return { command: { setCurrent: { tournamentName: parameters[0], channelID } } }
   } catch (err) {
@@ -29,12 +36,12 @@ const parseCurrentTournament = (parameters, channelID) => {
   }
 }
 
-const parseNewTournament = (parameters) => {
+const parseNew = (parameters) => {
   let name = null
   let rounds = null
   try {
-    name = parameters[parameters.findIndex(param => param === '-n') + 1]
-    rounds = parameters[parameters.findIndex(param => param === '-r') + 1]
+    name = parameters[0]
+    rounds = parameters[parameters.findIndex(param => param === 'rounds') - 1]
 
     if (!isNormalInteger(rounds) || rounds < 3) return { command: null, err: 'rounds not found or too small.' }
     if (!/\S/.test(name)) return { command: null, err: 'name not found' }

@@ -21,7 +21,7 @@ const setCurrentTournament = async (currentTournament) => {
   }
   console.log(`SETTING CURRENT TOURNAMENT: ${JSON.stringify(params)}`)
   await documentDB.update(params, (err) => { console.log(err) }).promise()
-  return `${currentTournament.tournamentName} is now the current tournament.`
+  return `${currentTournament.tournamentName} is now the current tournament in this channel.`
 }
 
 module.exports = { execute }
