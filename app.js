@@ -1,7 +1,7 @@
 const commandParser = require('./src/commandParser')
-const newTournament = require('./src/dataAccess/newTournament')
-const currentTournament = require('./src/dataAccess/currentTournament')
-const addPlayers = require('./src/dataAccess/addPlayers')
+const newTournament = require('./src/commandRunners/newTournament')
+const currentTournament = require('./src/commandRunners/currentTournament')
+const addPlayers = require('./src/commandRunners/addPlayers')
 const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/response')
 
 const commandRunners = {
@@ -11,9 +11,6 @@ const commandRunners = {
 }
 
 exports.handler = async (event) => {
-  const eventText = JSON.stringify(event, null, 2)
-  console.log('Received event:', eventText)
-
   let { type, data, error } = await commandParser.parse(event)
   if (error) return handleError(error, event)
 
@@ -21,6 +18,7 @@ exports.handler = async (event) => {
 
   let result = 'no result?'
   try {
+    console.log(type, data)
     result = await commandRunners[type].execute(data)
   } catch (err) {
     return handleError(err, event)
@@ -30,7 +28,7 @@ exports.handler = async (event) => {
 }
 
 const handleError = (err, event) => {
-  const errText = `Error: ${err}, Event: ${JSON.stringify(event)}`
-  console.log(errText)
+  const errText = `Error: ${err}, ` + 'try `/tournaBot help`'
+  console.log(err)
   return createErrorResponse(errText)
 }

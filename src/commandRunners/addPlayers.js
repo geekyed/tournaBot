@@ -39,7 +39,7 @@ const execute = async (data) => {
   console.log(`Current Players ${currentPlayers}`)
 
   data.players.forEach(player => {
-    currentPlayers.push(player)
+    if (currentPlayers.findIndex(currentPlayer => player === currentPlayer) === -1) currentPlayers.push(player)
   })
 
   console.log(`NEW Current Players ${currentPlayers}`)
