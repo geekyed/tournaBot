@@ -41,6 +41,6 @@ const createHelpResponse = () => {
 
 const helpText = '*new*: Create a new tournament. `/tournaBot new myTourna 3 rounds` \n' +
 '*current*: Set the current tournament `/tournaBot current myTourna`\n' +
-'*players*: Add new players `/tournaBot players Ed Andy Tom Kevin Ashar Gabor David Roni`\n'
+'*players*: Add new players `/tournaBot addPlayers @edward.weston @david.hackman`\n'
 
 module.exports = { createErrorResponse, createSuccessResponse, createHelpResponse }

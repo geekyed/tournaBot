@@ -1,11 +1,13 @@
 const commandParser = require('./src/commandParser')
 const newTournament = require('./src/dataAccess/newTournament')
 const currentTournament = require('./src/dataAccess/currentTournament')
+const addPlayers = require('./src/dataAccess/addPlayers')
 const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/response')
 
 const commandRunners = {
   'newTournament': newTournament,
-  'current': currentTournament
+  'current': currentTournament,
+  'addPlayers': addPlayers
 }
 
 exports.handler = async (event) => {

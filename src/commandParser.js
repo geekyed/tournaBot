@@ -8,8 +8,8 @@ const parse = async (event) => {
       return parseNew(parameters)
     case 'current':
       return parseCurrent(parameters, event.channel_id)
-    case 'players':
-      return parsePlayers(parameters)
+    case 'addPlayers':
+      return parsePlayers(parameters, event.channel_id)
     default:
       return { type: 'help', data: { responseURL: event.response_url } }
   }
@@ -21,8 +21,8 @@ const stripCommand = (text) => {
   return parameters
 }
 
-const parsePlayers = (parameters) => {
-  return { type: 'players', data: { players: parameters } }
+const parsePlayers = (parameters, channelID) => {
+  return { type: 'addPlayers', data: { players: parameters, channelID } }
 }
 
 const parseCurrent = (parameters, channelID) => {
