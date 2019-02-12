@@ -12,13 +12,17 @@ exports.handler = async (event) => {
   const eventText = JSON.stringify(event, null, 2)
   console.log('Received event:', eventText)
 
-  let { type, data, err } = await commandParser.parse(event)
-  if (err) return handleError(err, event)
+  let { type, data, error } = await commandParser.parse(event)
+  if (error) return handleError(error, event)
 
   if (type === 'help') return createHelpResponse()
 
-  let { result, runnerErr } = await commandRunners[type].execute(data)
-  if (err) return handleError(runnerErr, event)
+  let result = 'no result?'
+  try {
+    result = await commandRunners[type].execute(data)
+  } catch (err) {
+    return handleError(err, event)
+  }
 
   return createSuccessResponse(result)
 }

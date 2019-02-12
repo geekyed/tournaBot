@@ -29,7 +29,7 @@ const parseCurrent = (parameters, channelID) => {
   try {
     return { type: 'current', data: { tournamentName: parameters[0], channelID } }
   } catch (err) {
-    return { err: 'current command invalid try: /tourneyBot current mytournament' }
+    return { error: 'current command invalid try: /tourneyBot current mytournament' }
   }
 }
 
@@ -43,7 +43,7 @@ const parseNew = (parameters) => {
     if (!isNormalInteger(rounds) || rounds < 3) return { err: 'rounds not found or too small.' }
     if (!/\S/.test(name)) return { err: 'name not found' }
   } catch (err) {
-    return { err: 'new command invalid try: /tourneyBot new -n mytournament -r 4' }
+    return { error: 'new command invalid try: /tourneyBot new -n mytournament -r 4' }
   }
   return { type: 'newTournament', data: { name, rounds } }
 }

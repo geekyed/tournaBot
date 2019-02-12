@@ -13,13 +13,10 @@ const execute = async (data) => {
     },
     ReturnValues: 'UPDATED_NEW'
   }
-  console.log(`SETTING CURRENT TOURNAMENT: ${JSON.stringify(params)}`)
 
-  let error = null
-  await documentDB.update(params, (err) => { error = err }).promise()
-  if (error) return { err: error }
+  await documentDB.update(params).promise()
 
-  return { result: `${data.tournamentName} is now the current tournament in this channel.` }
+  return `${data.tournamentName} is now the current tournament in this channel.`
 }
 
 module.exports = { execute }
