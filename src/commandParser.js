@@ -45,7 +45,7 @@ const parseNew = (parameters) => {
   } catch (err) {
     return { err: 'new command invalid try: /tourneyBot new -n mytournament -r 4' }
   }
-  return { type: 'new', data: { name, rounds } }
+  return { type: 'newTournament', data: { name, rounds } }
 }
 
 const isNormalInteger = (str) => {

@@ -4,7 +4,7 @@ const currentTournament = require('./src/dataAccess/currentTournament')
 const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/response')
 
 const commandRunners = {
-  'new': newTournament,
+  'newTournament': newTournament,
   'current': currentTournament
 }
 

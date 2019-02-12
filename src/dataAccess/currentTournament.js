@@ -3,7 +3,7 @@ const documentDB = new AWS.DynamoDB.DocumentClient()
 
 const execute = async (data) => {
   const params = {
-    TableName: 'tournaBot-data',
+    TableName: 'tournaBot-currentTournament',
     Key: {
       channelID: data.channelID
     },
