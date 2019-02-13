@@ -5,9 +5,7 @@ const createErrorResponse = (err) => {
       {
         color: 'danger',
         text: err,
-        fallback: err,
-        footer: `tourneyBot`,
-        ts: Date.now() / 1000
+        fallback: err
       }
     ] }
 }
@@ -19,9 +17,7 @@ const createSuccessResponse = (message) => {
       {
         color: 'good',
         text: message,
-        fallback: message,
-        footer: `tourneyBot`,
-        ts: Date.now() / 1000
+        fallback: message
       }
     ] }
 }

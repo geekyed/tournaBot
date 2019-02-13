@@ -15,23 +15,30 @@ const execute = async (data) => {
 
   if (nameResult.Count !== 1) throw new { err: `No current tournament set for channel <#${data.channelID}>.` }()
 
-  let tournamentName = nameResult.Items[0].tournamentName
-
-  let savedTournament = await tournament.get(tournamentName)
-
-  console.log(JSON.stringify(savedTournament))
+  let savedTournament = await tournament.get(nameResult.Items[0].tournamentName)
 
   if (!savedTournament.players) savedTournament.players = []
 
   data.players.forEach(player => {
-    if (savedTournament.players.findIndex(currentPlayer => player === currentPlayer) === -1) savedTournament.players.push(player)
+    if (!elementIsInArray(player, savedTournament.players)) {
+      savedTournament.players.push(player)
+    }
   })
-
-  console.log(JSON.stringify(savedTournament))
 
   await tournament.addOrUpdate(savedTournament)
 
-  return `Added players: ${data.players}, current players: ${savedTournament.players}`
+  return `Added players:${buildFormattedPlayers(data.players)}\nCurrent players:${buildFormattedPlayers(savedTournament.players)}`
 }
 
+const buildFormattedPlayers = (players) => {
+  let formatted = ''
+  players.forEach(player => {
+    formatted += ` <${player}>`
+  })
+  return formatted
+}
+
+const elementIsInArray = (myElement, myArray) => {
+  return (myArray.findIndex(el => el === myElement) !== -1)
+}
 module.exports = { execute }
