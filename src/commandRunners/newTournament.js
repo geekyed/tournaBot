@@ -1,14 +1,8 @@
-const AWS = require('aws-sdk')
-const documentDB = new AWS.DynamoDB.DocumentClient()
+
+const tournament = require('../dataAccess/tournament')
 
 const execute = async (data) => {
-  const params = {
-    TableName: 'tournaBot-tournaments',
-    Item: { tournaName: data.tournaName, rounds: data.rounds }
-  }
-
-  await documentDB.put(params).promise()
-
+  await tournament.addOrUpdate({ tournamentName: data.tournaName, rounds: data.rounds })
   return `${data.tournaName} tournament started, with ${data.rounds} rounds.`
 }
 

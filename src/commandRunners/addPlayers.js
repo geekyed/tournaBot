@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk')
+const tournament = require('../dataAccess/tournament')
 const documentDB = new AWS.DynamoDB.DocumentClient()
 
 const execute = async (data) => {
@@ -14,51 +15,23 @@ const execute = async (data) => {
 
   if (nameResult.Count !== 1) throw new { err: `No current tournament set for channel <#${data.channelID}>.` }()
 
-  console.log(nameResult)
+  let tournamentName = nameResult.Items[0].tournamentName
 
-  const tournamentName = nameResult.Items[0].tournamentName
+  let savedTournament = await tournament.get(tournamentName)
 
-  const getTournament = {
-    TableName: 'tournaBot-tournaments',
-    KeyConditionExpression: 'tournaName = :tournamentName',
-    ExpressionAttributeValues: {
-      ':tournamentName': tournamentName
-    }
-  }
+  console.log(JSON.stringify(savedTournament))
 
-  const getTournamentResult = await documentDB.query(getTournament).promise()
-
-  console.log(getTournamentResult)
-
-  if (getTournamentResult.Count !== 1) throw new { err: `This tournament (${tournamentName} doesnt exist have you created it yet?` }()
-
-  let currentPlayers = getTournamentResult.Items[0].players
-
-  if (!currentPlayers) currentPlayers = []
-
-  console.log(`Current Players ${currentPlayers}`)
+  if (!savedTournament.players) savedTournament.players = []
 
   data.players.forEach(player => {
-    if (currentPlayers.findIndex(currentPlayer => player === currentPlayer) === -1) currentPlayers.push(player)
+    if (savedTournament.players.findIndex(currentPlayer => player === currentPlayer) === -1) savedTournament.players.push(player)
   })
 
-  console.log(`NEW Current Players ${currentPlayers}`)
+  console.log(JSON.stringify(savedTournament))
 
-  const updatePlayers = {
-    TableName: 'tournaBot-tournaments',
-    Key: {
-      tournaName: tournamentName
-    },
-    UpdateExpression: 'set players = :players',
-    ExpressionAttributeValues: {
-      ':players': currentPlayers
-    },
-    ReturnValues: 'UPDATED_NEW'
-  }
+  await tournament.addOrUpdate(savedTournament)
 
-  await documentDB.update(updatePlayers).promise()
-
-  return `Added players: ${data.players}, current players: ${currentPlayers}`
+  return `Added players: ${data.players}, current players: ${savedTournament.players}`
 }
 
 module.exports = { execute }
