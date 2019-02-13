@@ -1,21 +1,10 @@
-const AWS = require('aws-sdk')
 const tournament = require('../dataAccess/tournament')
-const documentDB = new AWS.DynamoDB.DocumentClient()
+const currentTournament = require('../dataAccess/currentTournament')
 
 const execute = async (data) => {
-  const getTournamentName = {
-    TableName: 'tournaBot-currentTournament',
-    KeyConditionExpression: 'channelID = :channelID',
-    ExpressionAttributeValues: {
-      ':channelID': data.channelID
-    }
-  }
+  const tournamentChannelLink = await currentTournament.get(data.channelID)
 
-  const nameResult = await documentDB.query(getTournamentName).promise()
-
-  if (nameResult.Count !== 1) throw new { err: `No current tournament set for channel <#${data.channelID}>.` }()
-
-  let savedTournament = await tournament.get(nameResult.Items[0].tournamentName)
+  let savedTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
   if (!savedTournament.players) savedTournament.players = []
 
@@ -25,7 +14,7 @@ const execute = async (data) => {
     }
   })
 
-  await tournament.addOrUpdate(savedTournament)
+  await tournament.set(savedTournament)
 
   return `Added players:${buildFormattedPlayers(data.players)}\nCurrent players:${buildFormattedPlayers(savedTournament.players)}`
 }

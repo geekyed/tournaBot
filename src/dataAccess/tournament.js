@@ -19,7 +19,7 @@ const get = async (tournamentName) => {
   return getTournamentResult.Items[0]
 }
 
-const addOrUpdate = async (tournament) => {
+const set = async (tournament) => {
   const params = {
     TableName,
     Item: tournament
@@ -28,4 +28,4 @@ const addOrUpdate = async (tournament) => {
   await documentDB.put(params).promise()
 }
 
-module.exports = { get, addOrUpdate }
+module.exports = { get, set }
