@@ -18,7 +18,6 @@ exports.handler = async (event) => {
 
   let result = 'no result?'
   try {
-    console.log(type, data)
     result = await commandRunners[type].execute(data)
   } catch (err) {
     return handleError(err, event)
@@ -29,6 +28,6 @@ exports.handler = async (event) => {
 
 const handleError = (err, event) => {
   const errText = `Error: ${err}, ` + 'try `/tournaBot help`'
-  console.log(err)
+  console.log(`ERROR: ${err}, EVENT: ${event}`)
   return createErrorResponse(errText)
 }
