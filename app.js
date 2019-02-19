@@ -1,13 +1,15 @@
 const commandParser = require('./src/commandParser')
-const newTournament = require('./src/commandRunners/newTournament')
-const currentTournament = require('./src/commandRunners/currentTournament')
-const addPlayers = require('./src/commandRunners/addPlayers')
+const newTournamentRunner = require('./src/commandRunners/newTournamentRunner')
+const currentTournamentRunner = require('./src/commandRunners/currentTournamentRunner')
+const generateMatchesRunner = require('./src/commandRunners/generateMatchesRunner')
+const addPlayersRunner = require('./src/commandRunners/addPlayersRunner')
 const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/response')
 
 const commandRunners = {
-  'newTournament': newTournament,
-  'current': currentTournament,
-  'addPlayers': addPlayers
+  'newTournament': newTournamentRunner,
+  'current': currentTournamentRunner,
+  'addPlayers': addPlayersRunner,
+  'generate': generateMatchesRunner
 }
 
 exports.handler = async (event) => {
@@ -28,6 +30,6 @@ exports.handler = async (event) => {
 
 const handleError = (err, event) => {
   const errText = `Error: ${err}, ` + 'try `/tournaBot help`'
-  console.log(`ERROR: ${err}, EVENT: ${event}`)
+  console.log(`ERROR: ${err}, EVENT: ${JSON.stringify(event)}`)
   return createErrorResponse(errText)
 }

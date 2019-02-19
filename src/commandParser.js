@@ -9,7 +9,9 @@ const parse = async (event) => {
     case 'current':
       return parseCurrent(parameters, event.channel_id)
     case 'addPlayers':
-      return parsePlayers(parameters, event.channel_id)
+    return { type: 'addPlayers', data: { players: parameters, channelID: event.channel_id } }
+    case 'generate':
+    return { type: 'generate', data: { channelID: event.channel_id } }
     default:
       return { type: 'help', data: { responseURL: event.response_url } }
   }
@@ -19,10 +21,6 @@ const stripCommand = (text) => {
   let parameters = text.split(' ')
   parameters.shift()
   return parameters
-}
-
-const parsePlayers = (parameters, channelID) => {
-  return { type: 'addPlayers', data: { players: parameters, channelID } }
 }
 
 const parseCurrent = (parameters, channelID) => {
@@ -35,19 +33,19 @@ const parseCurrent = (parameters, channelID) => {
 
 const parseNew = (parameters) => {
   let tournaName = null
-  let rounds = null
+  let numberRounds = null
   try {
     tournaName = parameters[0]
     const roundsIndex = parameters.findIndex(param => param === 'rounds')
     if (roundsIndex === -1) return { error: 'rounds not found or too small' }
-    rounds = parameters[roundsIndex - 1]
+    numberRounds = parameters[roundsIndex - 1]
 
-    if (!isNormalInteger(rounds) || rounds < 3) return { error: 'rounds not found or too small' }
+    if (!isNormalInteger(numberRounds) || numberRounds < 3) return { error: 'rounds not found or too small' }
     if (!/\S/.test(tournaName)) return { error: 'name not found' }
   } catch (err) {
     return { error: 'new command invalid' }
   }
-  return { type: 'newTournament', data: { tournaName, rounds } }
+  return { type: 'newTournament', data: { tournaName, numberRounds } }
 }
 
 const isNormalInteger = (str) => {
