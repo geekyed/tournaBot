@@ -15,11 +15,11 @@ const execute = async (data) => {
       player1: popRandomElement(players),
       player2: popRandomElement(players),
       score: {
-        player1: null,
-        player2: null
+        player1: 0,
+        player2: 0
       }
     }
-    matchesString += `<${newMatch.player1}> vs <${newMatch.player2}>\n`
+    matchesString += `${newMatch.player1} vs ${newMatch.player2}\n`
     savedTournament.rounds[savedTournament.currentRound - 1].matches.push(newMatch)
   }
   await tournament.set(savedTournament)
@@ -27,6 +27,7 @@ const execute = async (data) => {
   return matchesString
 }
 const popRandomElement = (players)=> {
+  if(players.length === 0) return 'Bye'
   const playerIndex = Math.floor(Math.random() * players.length)
   return players.splice(playerIndex, 1)[0]
 }

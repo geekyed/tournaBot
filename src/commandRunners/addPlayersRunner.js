@@ -22,7 +22,7 @@ const execute = async (data) => {
 const buildFormattedPlayers = (players) => {
   let formatted = ''
   players.forEach(player => {
-    formatted += ` <${player}>`
+    formatted += ` ${player}`
   })
   return formatted
 }
