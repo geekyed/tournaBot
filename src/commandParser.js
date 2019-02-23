@@ -9,9 +9,9 @@ const parse = async (event) => {
     case 'current':
       return parseCurrent(parameters, event.channel_id)
     case 'addPlayers':
-    return { type: 'addPlayers', data: { players: parameters, channelID: event.channel_id } }
+      return { type: 'addPlayers', data: { players: parameters, channelID: event.channel_id } }
     case 'generate':
-    return { type: 'generate', data: { channelID: event.channel_id } }
+      return { type: 'generate', data: { channelID: event.channel_id } }
     default:
       return { type: 'help', data: { responseURL: event.response_url } }
   }
