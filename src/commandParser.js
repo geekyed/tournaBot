@@ -8,6 +8,8 @@ const parse = async (event) => {
       return parseNew(parameters)
     case 'current':
       return parseCurrent(parameters, event.channel_id)
+    case 'result':
+      return parseResult(parameters, event.channel_id)
     case 'addPlayers':
       return { type: 'addPlayers', data: { players: parameters, channelID: event.channel_id } }
     case 'generate':
@@ -21,6 +23,33 @@ const stripCommand = (text) => {
   let parameters = text.split(' ')
   parameters.shift()
   return parameters
+}
+
+const validatePlayer = (player) => {
+  const playerRE = /(<@[A-Z0-9]+\|[a-z\.]+>)/
+  return playerRE.test(player)
+} 
+
+const parseResult = (parameters, channelID) => {
+
+  if (!validatePlayer(parameters[0]) || !validatePlayer(parameters[3])) {
+    return { error: 'one or more players have failed string validation' }
+  }
+
+  if (!isNormalInteger(parameters[1]) || !isNormalInteger(parameters[2])) {
+    return { error: 'scores are not valid integers' }
+  }
+
+  return { 
+    type: 'result', 
+    data: { 
+      channelID,
+      player1: parameters[0], 
+      player1Score: parameters[1], 
+      player2Score: parameters[2],
+      player2: parameters[3] 
+    }
+  }
 }
 
 const parseCurrent = (parameters, channelID) => {
