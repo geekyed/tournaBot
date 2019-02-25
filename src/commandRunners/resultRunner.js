@@ -48,9 +48,9 @@ const allMatchesCompleted = (matches) => {
 const createResponse = (user, score, isRoundFinished) => {
   let finished = ''
   if (isRoundFinished) finished = ' The round has finished, use generate to create the next set of pairings'
-  if (score.user > score.opponent) response = `Result saved, congrats on the win <@${user}>!${finished}`
-  if (score.opponent > score.user) response = `Result saved, better luck next time <@${user}>${finished}`
-  if (score.opponent === score.user) response = `Result saved, oh you drew <@${user}>${finished}`
+  if (score.user > score.opponent) return `Result saved, congrats on the win <@${user}>!${finished}`
+  if (score.opponent > score.user) return `Result saved, better luck next time <@${user}>${finished}`
+  if (score.opponent === score.user) return `Result saved, oh you drew <@${user}>${finished}`
 }
 
 module.exports = { execute }
