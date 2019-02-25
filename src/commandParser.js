@@ -39,6 +39,7 @@ const parseResult = (parameters, channelID, userID) => {
   }
 
   const splitScore = parameters[1].split('-')
+  if (splitScore[0] < splitScore[1]) return { error: `I'm sorry you can't win with a score lower than you opponent, have you typed them in the right way around?`}
 
   switch (parameters[0]) {
     case 'won':
@@ -46,12 +47,9 @@ const parseResult = (parameters, channelID, userID) => {
       result.data.score.opponent = splitScore[1]
       break
     case 'lost':
+    case 'drew':
       result.data.score.user = splitScore[1]
       result.data.score.opponent = splitScore[0]
-      break
-    case 'drew':
-      result.data.score.user = splitScore[0]
-      result.data.score.opponent = splitScore[1]
       break
     default:
       return { error: 'did you forget if you won, lost or drew?' }

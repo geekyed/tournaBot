@@ -32,7 +32,7 @@ const saveTournament = async (myTournament, data) => {
   let rounds = myTournament.rounds[myTournament.currentRound - 1]
   rounds.started = true
   const isRoundFinished = allMatchesCompleted(rounds.matches)
-  if (isRoundFinished) myTournament.currentRound++
+  if (isRoundFinished && myTournament.currentRound < myTournament.rounds.length) myTournament.currentRound++
 
   await tournament.set(myTournament)
   return createResponse(data.userID, data.score, isRoundFinished)
