@@ -14,7 +14,7 @@ const get = async (tournamentName) => {
 
   const getTournamentResult = await documentDB.query(getTournament).promise()
 
-  if (getTournamentResult.Count !== 1) throw new { err: `tournament (${tournamentName} not found` }()
+  if (getTournamentResult.Count !== 1) throw new Error(`tournament (${tournamentName} not found`)
 
   return getTournamentResult.Items[0]
 }

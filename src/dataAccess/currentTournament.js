@@ -14,7 +14,7 @@ const get = async (channelID) => {
 
   const result = await documentDB.query(getParams).promise()
 
-  if (result.Count !== 1) throw new { err: `no current tournament set in <#${channelID}>` }()
+  if (result.Count !== 1) throw new Error(`no current tournament set in <#${channelID}>`)
 
   return result.Items[0]
 }
