@@ -3,28 +3,39 @@ const currentTournament = require('../dataAccess/currentTournament')
 
 const execute = async (data) => {
   const tournamentChannelLink = await currentTournament.get(data.channelID)
-  let savedTournament = await tournament.get(tournamentChannelLink.tournamentName)
+  let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
-  let matchFound = false
-  savedTournament.rounds[savedTournament.currentRound - 1].matches.forEach(match => {
-    //Find match and set result
-    if (data.player1 === match.player1 && data.player2 === match.player2) {
-      match.score.player1 = data.player1Score
-      match.score.player2 = data.player2Score
-      matchFound = true
-    }
-    
-    // Handle players the wrong way around
-    if (data.player2 === match.player1 && data.player1 === match.player2) {
-      match.score.player1 = data.player2Score
-      match.score.player2 = data.player1Score
-      matchFound = true
-    }
-  });
+  let matches = myTournament.rounds[myTournament.currentRound - 1].matches
 
-  if (!matchFound) throw new Error(`no current match found in tournament: ${savedTournament.tournamentName}, in channel: <#${data.channelID}> for players: ${data.player1} and ${data.player2}`)
-  
-  await tournament.set(savedTournament)
+  for (let i = 0; i < matches.length; i++ ) {
+    // Is user player 1 of this match?
+    if (matches[i].player1.includes(data.userID)) {
+      matches[i].score.player1 = data.score.user
+      matches[i].score.player2 = data.score.opponent
+      return await saveTournament(myTournament, data)
+    }
+    // Is user player 2 of this match?
+    if (matches[i].player2.includes(data.userID)) {
+      matches[i].score.player1 = data.score.opponent
+      matches[i].score.player2 = data.score.user
+      return await saveTournament(myTournament, data)
+    }
+  }
+
+  throw new Error(`no current match found in tournament: ${myTournament.tournamentName}, 
+    in channel: <#${data.channelID}> for player: <@${data.userID}>`)
+}
+
+const saveTournament = async (myTournament, data) => {
+  myTournament.rounds[myTournament.currentRound - 1].started = true
+  await tournament.set(myTournament)
+  return createResponse(data.userID, data.score)
+}
+
+const createResponse = (user, score) => {
+  if (score.user > score.opponent) return `Result saved, congrats on the win <@${user}>!`
+  if (score.opponent > score.user) return `Result saved, better luck next time <@${user}>`
+  if (score.opponent === score.user) return `Result saved, oh you drew <@${user}>`
 }
 
 module.exports = { execute }

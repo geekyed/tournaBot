@@ -31,7 +31,7 @@ exports.handler = async (event) => {
 }
 
 const handleError = (err, event) => {
-  const errText = `Error: ${err}, ` + 'try `/tournaBot help`'
+  const errText = `${err}` + ' try `/tournaBot help`'
   console.log(`ERROR: ${err}, EVENT: ${JSON.stringify(event)}`)
   return createErrorResponse(errText)
 }

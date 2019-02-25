@@ -6,10 +6,14 @@ const execute = async (data) => {
 
   let savedTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
-  let players = savedTournament.players.slice() // Copy Players Array.
+  if (savedTournament.rounds[savedTournament.currentRound - 1].started) {
+    throw new Error(`You cant regenerate matches for round ${savedTournament.currentRound}, as results have already been recorded!`)
+  } 
 
+  let players = savedTournament.players.slice() // Copy Players Array.
   let matchesString = `Round ${savedTournament.currentRound} Matches Generated!\n`
 
+  savedTournament.rounds[savedTournament.currentRound - 1].matches = [] // Ensure we overwrite
   while (players.length !== 0) {
     let newMatch = {
       player1: popRandomElement(players),

@@ -8,8 +8,8 @@ const parse = async (event) => {
       return parseNew(parameters)
     case 'current':
       return parseCurrent(parameters, event.channel_id)
-    case 'result':
-      return parseResult(parameters, event.channel_id)
+    case 'I':
+      return parseResult(parameters, event.channel_id, event.user_id)
     case 'addPlayers':
       return { type: 'addPlayers', data: { players: parameters, channelID: event.channel_id } }
     case 'generate':
@@ -25,31 +25,43 @@ const stripCommand = (text) => {
   return parameters
 }
 
-const validatePlayer = (player) => {
-  const playerRE = /(<@[A-Z0-9]+\|[a-z\.]+>)/
-  return playerRE.test(player)
-} 
-
-const parseResult = (parameters, channelID) => {
-
-  if (!validatePlayer(parameters[0]) || !validatePlayer(parameters[3])) {
-    return { error: 'one or more players have failed string validation' }
-  }
-
-  if (!isNormalInteger(parameters[1]) || !isNormalInteger(parameters[2])) {
-    return { error: 'scores are not valid integers' }
-  }
-
-  return { 
+const parseResult = (parameters, channelID, userID) => {
+  let result = { 
     type: 'result', 
     data: { 
       channelID,
-      player1: parameters[0], 
-      player1Score: parameters[1], 
-      player2Score: parameters[2],
-      player2: parameters[3] 
+      userID,
+      score: {
+        user: 0,
+        opponent: 0
+      }
     }
   }
+
+  const splitScore = parameters[1].split('-')
+
+  switch (parameters[0]) {
+    case 'won':
+      result.data.score.user = splitScore[0]
+      result.data.score.opponent = splitScore[1]
+      break
+    case 'lost':
+      result.data.score.user = splitScore[1]
+      result.data.score.opponent = splitScore[0]
+      break
+    case 'drew':
+      result.data.score.user = splitScore[0]
+      result.data.score.opponent = splitScore[1]
+      break
+    default:
+      return { error: 'did you forget if you won, lost or drew?' }
+  }
+
+  if (!isNormalInteger(result.data.score.user) || !isNormalInteger(result.data.score.opponent)) {
+    return { error: 'scores are not valid integers' }
+  }
+
+  return result
 }
 
 const parseCurrent = (parameters, channelID) => {
