@@ -15,11 +15,14 @@ const execute = async (data) => {
 
   savedTournament.rounds[savedTournament.currentRound - 1].matches = [] // Ensure we overwrite
   while (players.length !== 0) {
+    const player1 = popRandomElement(players)
+    const player2 = popRandomElement(players)
     let newMatch = {
-      player1: popRandomElement(players),
-      player2: popRandomElement(players),
+      player1,
+      player2,
+      completed: player2 === 'Bye',
       score: {
-        player1: 0,
+        player1: player2 === 'Bye' ? 2 :0,
         player2: 0
       }
     }
