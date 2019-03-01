@@ -35,7 +35,8 @@ const execute = async (data) => {
     matchesString += `${newMatch.player1} vs ${newMatch.player2}\n`
     round.matches.push(newMatch)
   }
-  
+
+  savedTournament.rounds.push(round)
   await tournament.set(savedTournament)
 
   return matchesString
