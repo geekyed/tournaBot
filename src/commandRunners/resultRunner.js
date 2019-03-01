@@ -29,20 +29,13 @@ const execute = async (data) => {
 }
 
 const saveTournament = async (myTournament, data) => {
-  let rounds = myTournament.rounds[myTournament.currentRound - 1]
-  rounds.started = true
-  const isRoundFinished = allMatchesCompleted(rounds.matches)
+  let round = myTournament.rounds[myTournament.currentRound - 1]
+  round.started = true
+  const isRoundFinished = round.matches.every( match => match.completed )
   if (isRoundFinished && myTournament.currentRound < myTournament.rounds.length) myTournament.currentRound++
 
   await tournament.set(myTournament)
   return createResponse(data.userID, data.score, isRoundFinished)
-}
-
-const allMatchesCompleted = (matches) => {
-  matches.forEach(match => {
-    if (match.completed === false) return false
-  })
-  return true
 }
 
 const createResponse = (user, score, isRoundFinished) => {
