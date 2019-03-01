@@ -72,19 +72,13 @@ const parseCurrent = (parameters, channelID) => {
 
 const parseNew = (parameters) => {
   let tournaName = null
-  let numberRounds = null
   try {
     tournaName = parameters[0]
-    const roundsIndex = parameters.findIndex(param => param === 'rounds')
-    if (roundsIndex === -1) return { error: 'rounds not found or too small' }
-    numberRounds = parameters[roundsIndex - 1]
-
-    if (!isNormalInteger(numberRounds) || numberRounds < 3) return { error: 'rounds not found or too small' }
     if (!/\S/.test(tournaName)) return { error: 'name not found' }
   } catch (err) {
     return { error: 'new command invalid' }
   }
-  return { type: 'newTournament', data: { tournaName, numberRounds } }
+  return { type: 'newTournament', data: { tournaName } }
 }
 
 const isNormalInteger = (str) => {
