@@ -11,11 +11,12 @@ const execute = async (data) => {
     let match = round.matches[i]
 
     if (match.player1.includes(data.userID)) {
-      return processMatch(match, round, myTournament, data.score.user, data.score.opponent)
+      processMatch(match, round, myTournament, data.score.user, data.score.opponent)
+      return `Result saved: ${match.player1} ${match.score.player1} - ${match.score.player2} ${match.player2}`
     }
-    // Is user player 2 of this match?
     if (match.player2.includes(data.userID)) {
-      return processMatch(match, round, myTournament, data.score.opponent, data.score.user)
+      processMatch(match, round, myTournament, data.score.opponent, data.score.user)
+      return `Result saved: ${match.player1} ${match.score.player1} - ${match.score.player2} ${match.player2}`
     }
   }
 
@@ -23,16 +24,13 @@ const execute = async (data) => {
     in channel: <#${data.channelID}> for player: <@${data.userID}>`)
 }
 
-const processMatch = async (match, round, myTournament, p1Score, p2Score) => {
+const processMatch = async (match, round, myTournament, p1Score, p2Score, isPlayer1) => {
   setScores(match, p1Score, p2Score)
-  console.log('scores set')
   administerRound(myTournament, round)
-  console.log('admin done')
-
-  resultString = setPoints(match, round)
-  console.log('points set')
+  setPoints(match, round)
 
   await tournament.set(myTournament)
+
   return resultString
 }
 
@@ -47,19 +45,16 @@ const setPoints = (match, round) => {
   if (match.score.player1 === match.score.player2) { 
     round.points[match.player1] = 1
     round.points[match.player2] = 1
-    return `Result saved, oh you drew ${match.player1}`
   }
 
   if (match.score.player1 > match.score.player2) {
     round.points[match.player1] = 3
     round.points[match.player2] = 0
-    return `Result saved, congrats on the win ${match.player1}!`
   }
 
   if (match.score.player1 < match.score.player2) {
     round.points[match.player1] = 0
     round.points[match.player2] = 3
-    return `Result saved, better luck next time ${match.player1}`
   }
 
   throw new Error('There\'s something worng with the format of your score')
