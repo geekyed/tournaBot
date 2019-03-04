@@ -10,15 +10,10 @@ const execute = async (data) => {
 
   // If it's the first round we need to intialise the rounds array.
   if (myTournament.currentRound === 1) myTournament.rounds = []
-
   let round = { matches:[], started: false, points: {} }
 
   for (let j in myTournament.players) {
     round.points[myTournament.players[j]] = 0
-  }
-
-  if (round.started) {
-    throw new Error(`You cant regenerate matches for round ${myTournament.currentRound}, as results have already been recorded!`)
   }
 
   let players = myTournament.players.slice() // Copy players array.
