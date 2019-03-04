@@ -6,12 +6,6 @@ const execute = async (data) => {
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
   let round = myTournament.rounds[myTournament.currentRound - 1]
-  if (!round.points) {
-    round.points = {}
-    for (let j in myTournament.players) {
-      round.points[myTournament.players[j]] = 0
-    }
-  }
 
   let resultString = ''
   for (let i in round.matches) {

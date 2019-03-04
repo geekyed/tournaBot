@@ -4,25 +4,27 @@ const currentTournament = require('../dataAccess/currentTournament')
 const execute = async (data) => {
   const tournamentChannelLink = await currentTournament.get(data.channelID)
 
-  let savedTournament = await tournament.get(tournamentChannelLink.tournamentName)
+  let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
-  //const totalRounds = getTotalRounds(savedTournament.players.length)
+  //const totalRounds = getTotalRounds(myTournament.players.length)
 
   // If it's the first round we need to intialise the rounds array.
-  if (savedTournament.currentRound === 1) savedTournament.rounds = []
+  if (myTournament.currentRound === 1) myTournament.rounds = []
 
-  let round = savedTournament.rounds.length >= 1 ?
-    savedTournament.rounds[savedTournament.currentRound - 1] :
-    { matches:[], started: false }
+  let round = { matches:[], started: false, points: {} }
 
-  if (round.started) {
-    throw new Error(`You cant regenerate matches for round ${savedTournament.currentRound}, as results have already been recorded!`)
+  for (let j in myTournament.players) {
+    round.points[myTournament.players[j]] = 0
   }
 
-  let players = savedTournament.players.slice() // Copy players array.
-  let matchesString = `Round ${savedTournament.currentRound} matches generated!\n`
+  if (round.started) {
+    throw new Error(`You cant regenerate matches for round ${myTournament.currentRound}, as results have already been recorded!`)
+  }
+
+  let players = myTournament.players.slice() // Copy players array.
+  let matchesString = `Round ${myTournament.currentRound} matches generated!\n`
   while (players.length !== 0) {
-    const { player1, player2 } = generatePairing(savedTournament.currentRound, players)
+    const { player1, player2 } = generatePairing(myTournament.currentRound, players)
     let newMatch = {
       player1,
       player2,
@@ -34,10 +36,11 @@ const execute = async (data) => {
     }
     matchesString += `${newMatch.player1} vs ${newMatch.player2}\n`
     round.matches.push(newMatch)
+    if (player2 === 'Bye') round.points[player1] = 3
   }
 
-  savedTournament.rounds.push(round)
-  await tournament.set(savedTournament)
+  myTournament.rounds.push(round)
+  await tournament.set(myTournament)
 
   return matchesString
 }
