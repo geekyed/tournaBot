@@ -10,8 +10,8 @@ const parse = async (event) => {
       return parseCurrent(parameters, event.channel_id)
     case 'I':
       return parseResult(parameters, event.channel_id, event.user_id)
-    case 'addPlayers':
-      return { type: 'addPlayers', data: { players: parameters, channelID: event.channel_id } }
+    case 'players':
+      return { type: 'players', data: { players: parameters, channelID: event.channel_id } }
     case 'generate':
       return { type: 'generate', data: { channelID: event.channel_id } }
     default:

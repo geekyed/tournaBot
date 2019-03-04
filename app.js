@@ -2,14 +2,14 @@ const commandParser = require('./src/commandParser')
 const newTournamentRunner = require('./src/commandRunners/newTournamentRunner')
 const currentTournamentRunner = require('./src/commandRunners/currentTournamentRunner')
 const generateMatchesRunner = require('./src/commandRunners/generateMatchesRunner')
-const addPlayersRunner = require('./src/commandRunners/addPlayersRunner')
+const playersRunner = require('./src/commandRunners/playersRunner')
 const resultRunner = require('./src/commandRunners/resultRunner')
 const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/response')
 
 const commandRunners = {
   'newTournament': newTournamentRunner,
   'current': currentTournamentRunner,
-  'addPlayers': addPlayersRunner,
+  'players': playersRunner,
   'generate': generateMatchesRunner,
   'result': resultRunner
 }
