@@ -6,6 +6,8 @@ const execute = async (data) => {
 
   let savedTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
+  if (savedTournament.rounds && savedTournament.rounds[0].started) throw new Error('You can\'t add players to a started tournament!')
+
   if (!savedTournament.players) savedTournament.players = []
 
   data.players.forEach(player => {

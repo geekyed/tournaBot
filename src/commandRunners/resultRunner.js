@@ -5,45 +5,72 @@ const execute = async (data) => {
   const tournamentChannelLink = await currentTournament.get(data.channelID)
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
-  let matches = myTournament.rounds[myTournament.currentRound - 1].matches
+  let round = myTournament.rounds[myTournament.currentRound - 1]
+  if (!round.points) {
+    round.points = {}
+    for (let j in myTournament.players) {
+      round.points[myTournament.players[j]] = 0
+    }
+  }
 
-  for (let i = 0; i < matches.length; i++ ) {
-    // Is user player 1 of this match?
-    if (matches[i].player1.includes(data.userID)) {
-      matches[i].score.player1 = data.score.user
-      matches[i].score.player2 = data.score.opponent
-      matches[i].completed = true
-      return await saveTournament(myTournament, data)
+  let resultString = ''
+  for (let i in round.matches) {
+    let match = round.matches[i]
+
+    if (match.player1.includes(data.userID)) {
+      resultString = processMatch(match, round, myTournament, data.score.user, data.score.opponent)
     }
     // Is user player 2 of this match?
-    if (matches[i].player2.includes(data.userID)) {
-      matches[i].score.player1 = data.score.opponent
-      matches[i].score.player2 = data.score.user
-      matches[i].completed = true
-      return await saveTournament(myTournament, data)
+    if (match.player2.includes(data.userID)) {
+      resultString = processMatch(match, round, myTournament, data.score.opponent, data.score.user)
     }
+    return resultString
   }
 
   throw new Error(`no current match found in tournament: ${myTournament.tournamentName}, 
     in channel: <#${data.channelID}> for player: <@${data.userID}>`)
 }
 
-const saveTournament = async (myTournament, data) => {
-  let round = myTournament.rounds[myTournament.currentRound - 1]
-  round.started = true
-  const isRoundFinished = round.matches.every( match => match.completed )
-  if (isRoundFinished && myTournament.currentRound < myTournament.rounds.length) myTournament.currentRound++
+const processMatch = async (match, round, myTournament, p1Score, p2Score) => {
+  setScores(match, p1Score, p2Score)
+  administerRound(myTournament, round)
+  resultString = setPoints(match, round)
 
   await tournament.set(myTournament)
-  return createResponse(data.userID, data.score, isRoundFinished)
+  return resultString
 }
 
-const createResponse = (user, score, isRoundFinished) => {
-  let finished = ''
-  if (isRoundFinished) finished = ' The round has finished, use generate to create the next set of pairings'
-  if (score.user > score.opponent) return `Result saved, congrats on the win <@${user}>!${finished}`
-  if (score.opponent > score.user) return `Result saved, better luck next time <@${user}>${finished}`
-  if (score.opponent === score.user) return `Result saved, oh you drew <@${user}>${finished}`
+const administerRound = (myTournament, round) => {
+  round.started = true
+
+  const isRoundFinished = round.matches.every( m => m.completed )
+  if (isRoundFinished && myTournament.currentRound < myTournament.rounds.length) myTournament.currentRound++
+}
+
+const setPoints = (match, round) => {
+  if (match.score.player1 === match.score.player2) { 
+    round.points[match.player1] = 1
+    round.points[match.player2] = 1
+    return `Result saved, oh you drew <@${match.player1}>`
+  }
+
+  if (match.score.player1 > match.score.player2) {
+    round.points[match.player1] = 3
+    return `Result saved, congrats on the win <@${match.player1}>!`
+  }
+
+  if (match.score.player1 < match.score.player2) {
+    round.points[match.player2] = 3
+    return `Result saved, better luck next time <@${match.player1}>`
+  }
+
+  throw new Error('There\'s something worng with the format of your score')
+}
+
+const setScores = (match, p1Score, p2Score) => {
+  match.score.player1 = p1Score
+  match.score.player2 = p2Score
+  match.completed = true
 }
 
 module.exports = { execute }
