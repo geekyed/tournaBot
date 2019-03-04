@@ -39,7 +39,7 @@ const parseResult = (parameters, channelID, userID) => {
   }
 
   const splitScore = parameters[1].split('-')
-  if (splitScore[0] < splitScore[1]) return { error: `I'm sorry you can't win with a score lower than you opponent, have you typed them in the right way around?`}
+  if (splitScore[0] < splitScore[1]) return { error: `Have you typed your score in the right way around? (Hint: you dont normally say I lost 0-2.)`}
 
   switch (parameters[0]) {
     case 'won':
