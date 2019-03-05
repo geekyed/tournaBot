@@ -1,5 +1,6 @@
 const tournament = require('../dataAccess/tournament')
 const currentTournament = require('../dataAccess/currentTournament')
+const { determineTotalRounds }  = require('./helpers/determineTotalRounds')
 
 const Win = 3
 const Draw = 1
@@ -39,8 +40,12 @@ const processMatch = async (match, round, myTournament, p1Score, p2Score) => {
 const administerRound = (myTournament, round) => {
   round.started = true
 
-  const isRoundFinished = round.matches.every( m => m.completed )
-  if (isRoundFinished && myTournament.currentRound < myTournament.rounds.length) myTournament.currentRound++
+  const roundComplete = round.matches.every( m => m.completed )
+  if (roundComplete) {
+    if (myTournament.currentRound < determineTotalRounds(myTournament.players.length)) myTournament.currentRound++ 
+    // else tournament finished
+  }
+
 }
 
 const setPoints = (match, round) => {

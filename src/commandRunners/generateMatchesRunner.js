@@ -6,8 +6,6 @@ const execute = async (data) => {
 
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
-  const totalRounds = getTotalRounds(myTournament.players.length)
-
   // If it's the first round we need to intialise the rounds array.
   if (myTournament.currentRound === 1) myTournament.rounds = []
   let round = { matches:[], started: false, points: {} }
@@ -21,7 +19,6 @@ const execute = async (data) => {
     }
     totalScores.push({ name: myTournament.players[i], points })
   }
-
 
   totalScores.sort((a, b) => a.points - b.points)
 
@@ -51,15 +48,6 @@ const execute = async (data) => {
   return matchesString
 }
 
-const getTotalRounds = (numPlayers) => {
-  if (numPlayers <= 2) return 1
-  if (numPlayers <= 4) return 2
-  if (numPlayers <= 8) return 3
-  if (numPlayers <= 16) return 4
-  if (numPlayers <= 32) return 5
-  if (numPlayers <= 64) return 6
-  if (numPlayers <= 128) return 7
-  throw new Error(`Not sure how many rounds to generate!`)
-}
+
 
 module.exports = { execute }
