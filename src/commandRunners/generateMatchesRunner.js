@@ -19,7 +19,7 @@ const execute = async (data) => {
     for (let j in myTournament.rounds) { // get previous rounds points
       points += myTournament.rounds[j].points[myTournament.players[i]]
     }
-    totalScores.push({ player: myTournament.players[i], points })
+    totalScores.push({ name: myTournament.players[i], points })
   }
 
 
@@ -28,18 +28,19 @@ const execute = async (data) => {
   let matchesString = `Round ${myTournament.currentRound} matches generated!\n`
 
   while (totalScores.length !== 0) {
-    const player1 = totalScores.pop().player
-    const player2 = totalScores.pop().player
+    const player1 = totalScores.pop()
+    const player2 = totalScores.pop()
     let newMatch = {
-      player1,
-      player2,
+      player1: player1.name,
+      player2: player2.name,
       completed: this.player2 === 'Bye',
       score: {
         player1: 0,
         player2: 0
       }
     }
-    matchesString += `${newMatch.player1} vs ${newMatch.player2}\n`
+
+    matchesString += `${player1.name} ${player1.points}pts vs ${player2.name} ${player2.points}pts\n`
     round.matches.push(newMatch)
     if (player2 === 'Bye') round.points[player1] = 3
   }
