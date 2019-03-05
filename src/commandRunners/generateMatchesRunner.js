@@ -6,12 +6,14 @@ const execute = async (data) => {
 
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
-  // If it's the first round we need to intialise the rounds array.
-  if (myTournament.currentRound === 1) myTournament.rounds = []
-  let round = { matches:[], started: false, points: {} }
+  if (isRoundStarted(myTournament)) {
+    throw new Error('You cannot regenerate a round once a match has been played.')
+  }
 
-  let totalScores = collateTotalScore(myTournament, round)
-  totalScores.sort((a, b) => a.points - b.points) // Sort the scores ready for pairing.
+  let round = { matches:[], started: false, points: {} }
+  for (let i in myTournament.players) round.points[myTournament.players[i]] = 0
+ 
+  let totalScores = collateTotalScore(myTournament)
 
   let matchesString = `Round ${myTournament.currentRound} matches generated!\n`
 
@@ -30,6 +32,12 @@ const execute = async (data) => {
   return matchesString
 }
 
+const isRoundStarted = (myTournament) => {
+  const roundIndex = myTournament.currentRound - 1
+  typeof myTournament.rounds[roundIndex] !== 'undefined' && 
+  myTournament.rounds[roundIndex].started
+}
+
 const createMatch = (player1, player2) => {
   return newMatch = {
     player1: player1.name,
@@ -42,17 +50,16 @@ const createMatch = (player1, player2) => {
   }
 }
 
-const collateTotalScore = (myTournament, round) => {
+const collateTotalScore = (myTournament) => {
   let totalScores = []
   for (let i in myTournament.players) {
-    round.points[myTournament.players[i]] = 0 // init this rounds points
     let points = 0
-    for (let j in myTournament.rounds) { // get previous rounds points
+    for (let j in myTournament.rounds) {
       points += myTournament.rounds[j].points[myTournament.players[i]]
     }
     totalScores.push({ name: myTournament.players[i], points })
   }
-  return totalScores
+  return totalScores.sort((a, b) => a.points - b.points)
 }
 
 module.exports = { execute }
