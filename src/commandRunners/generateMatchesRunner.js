@@ -10,9 +10,8 @@ const execute = async (data) => {
     throw new Error('You cannot regenerate a round once a match has been played.')
   }
 
-  let round = { matches:[], started: false, points: {} }
-  for (let i in myTournament.players) round.points[myTournament.players[i]] = 0
- 
+  let round = initialiseRound(myTournament)
+  
   let totalScores = collateTotalScore(myTournament)
 
   let matchesString = `Round ${myTournament.currentRound} matches generated!\n`
@@ -30,6 +29,12 @@ const execute = async (data) => {
   await tournament.set(myTournament)
 
   return matchesString
+}
+
+const initialiseRound = (myTournament) => {
+  let round = { matches:[], started: false, points: {} }
+  for (let i in myTournament.players) round.points[myTournament.players[i]] = 0
+  return round
 }
 
 const isRoundStarted = (myTournament) => {
