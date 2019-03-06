@@ -25,7 +25,7 @@ const execute = async (data) => {
     if (player2 === 'Bye') round.points[player1] = 3
   }
 
-  myTournament.rounds.push(round)
+  myTournament.rounds[myTournament.currentRound - 1] = round
   await tournament.set(myTournament)
 
   return matchesString
@@ -64,7 +64,7 @@ const collateTotalScore = (myTournament) => {
     }
     totalScores.push({ name: myTournament.players[i], points })
   }
-  return totalScores.sort((a, b) => a.points - b.points)
+  return myTournament.currentRound !== 1 ? totalScores.sort((a, b) => a.points - b.points) : totalScores.sort(() => {return 0.5 - Math.random()})
 }
 
 module.exports = { execute }

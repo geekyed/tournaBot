@@ -5,7 +5,7 @@ const parse = async (event) => {
 
   switch (command) {
     case 'new':
-      return parseNew(parameters)
+      return parseNew(parameters, event.channel_id)
     case 'current':
       return parseCurrent(parameters, event.channel_id)
     case 'I':
@@ -70,15 +70,15 @@ const parseCurrent = (parameters, channelID) => {
   }
 }
 
-const parseNew = (parameters) => {
-  let tournaName = null
+const parseNew = (parameters, channelID) => {
+  let tournamentName = null
   try {
-    tournaName = parameters[0]
-    if (!/\S/.test(tournaName)) return { error: 'name not found' }
+    tournamentName = parameters[0]
+    if (!/\S/.test(tournamentName)) return { error: 'name not found' }
   } catch (err) {
     return { error: 'new command invalid' }
   }
-  return { type: 'newTournament', data: { tournaName } }
+  return { type: 'newTournament', data: { tournamentName, channelID } }
 }
 
 const isNormalInteger = (str) => {
