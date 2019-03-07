@@ -39,8 +39,7 @@ const initialiseRound = (myTournament) => {
 
 const isRoundStarted = (myTournament) => {
   const roundIndex = myTournament.currentRound - 1
-  typeof myTournament.rounds[roundIndex] !== 'undefined' && 
-  myTournament.rounds[roundIndex].started
+  return typeof myTournament.rounds[roundIndex] !== 'undefined' && myTournament.rounds[roundIndex].started
 }
 
 const createMatch = (player1, player2) => {
