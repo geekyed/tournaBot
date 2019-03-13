@@ -1,6 +1,5 @@
 const tournament = require('../dataAccess/tournament')
 const currentTournament = require('../dataAccess/currentTournament')
-const { determineTotalRounds }  = require('./helpers/determineTotalRounds')
 
 const Win = 3
 const Draw = 1
