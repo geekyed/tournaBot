@@ -11,18 +11,16 @@ const execute = async (data) => {
   }
 
   let round = initialiseRound(myTournament)
-  
   let totalScores = collateTotalScore(myTournament)
-
   let matchesString = `Round ${myTournament.currentRound} matches generated!\n`
 
   while (totalScores.length !== 0) {
     const player1 = totalScores.pop()
-    const player2 = totalScores.pop()
-    
+    const player2 = getPlayer2(player1, totalScores, myTournament.rounds)
+
     matchesString += `${player1.name} ${player1.points}pts vs ${player2.name} ${player2.points}pts\n`
-    round.matches.push(createMatch(player1, player2))
-    if (player2 === 'Bye') round.points[player1] = 3
+    round.matches.push(createMatch(player1.name, player2.name))
+    if (player2.name === 'Bye') round.points[player1.name] = 3
   }
 
   myTournament.rounds[myTournament.currentRound - 1] = round
@@ -30,6 +28,30 @@ const execute = async (data) => {
 
   return matchesString
 }
+
+const getPlayer2 = (player1, totalScores, rounds) => {
+
+  // P1 is last in the bunch so gets a bye.
+  if (totalScores.length === 0) return { name: 'Bye', points: 0 }
+  
+  let p2Index = totalScores.length - 1
+  // players cant play twice
+  while (playersHavePlayed(player1.name, totalScores[p2Index].name, rounds)) {
+    p2Index--
+    if(p2Index < 0) throw new Error(`Somethings gone wrong ${player1.name} has played everyone`)
+  }
+
+  return totalScores.splice(p2Index, 1)[0]
+}
+
+const playersHavePlayed = (player1Name, player2Name, rounds) => {
+  for(let i = 0; i < rounds.length; i++) {
+    if (getPlayersMatchIndexForRound(player1Name, rounds[i]) === getPlayersMatchIndexForRound(player2Name, rounds[i])) return true
+  }
+  return false
+}
+
+const getPlayersMatchIndexForRound = (playerName, round) => round.matches.findIndex(match => match.player1 === playerName || match.player2 === playerName)
 
 const initialiseRound = (myTournament) => {
   let round = { matches:[], started: false, points: {} }
@@ -42,11 +64,11 @@ const isRoundStarted = (myTournament) => {
   return typeof myTournament.rounds[roundIndex] !== 'undefined' && myTournament.rounds[roundIndex].started
 }
 
-const createMatch = (player1, player2) => {
+const createMatch = (player1name, player2Name) => {
   return newMatch = {
-    player1: player1.name,
-    player2: player2.name,
-    completed: this.player2 === 'Bye',
+    player1: player1name,
+    player2: player2Name,
+    completed: player2Name === 'Bye',
     score: {
       player1: 0,
       player2: 0
