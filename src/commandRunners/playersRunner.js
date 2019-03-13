@@ -4,21 +4,21 @@ const currentTournament = require('../dataAccess/currentTournament')
 const execute = async (data) => {
   const tournamentChannelLink = await currentTournament.get(data.channelID)
 
-  let savedTournament = await tournament.get(tournamentChannelLink.tournamentName)
+  let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
-  if (savedTournament.rounds.length > 0 && savedTournament.rounds[0].started) throw new Error('You can\'t add players to a started tournament!')
+  if (myTournament.rounds.length > 0 && myTournament.rounds[0].started) throw new Error('You can\'t add players to a started tournament!')
 
-  if (!savedTournament.players) savedTournament.players = []
+  if (!myTournament.players) myTournament.players = []
 
   data.players.forEach(player => {
-    if (!elementIsInArray(player, savedTournament.players)) {
-      savedTournament.players.push(player)
+    if (!elementIsInArray(player, myTournament.players)) {
+      myTournament.players.push(player)
     }
   })
 
-  await tournament.set(savedTournament)
+  await tournament.set(myTournament)
 
-  return `Added players:${buildFormattedPlayers(data.players)}\nCurrent players:${buildFormattedPlayers(savedTournament.players)}`
+  return `Added players:${buildFormattedPlayers(data.players)}\nCurrent players:${buildFormattedPlayers(myTournament.players)}`
 }
 
 const buildFormattedPlayers = (players) => {

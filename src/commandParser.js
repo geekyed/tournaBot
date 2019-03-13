@@ -16,6 +16,8 @@ const parse = async (event) => {
       return { type: 'players', data: { players: parameters, channelID: channelIdWithTeam } }
     case 'generate':
       return { type: 'generate', data: { channelID: channelIdWithTeam } }
+    case 'scores':
+      return { type: 'scores', data: { channelID: channelIdWithTeam } }
     default:
       return { type: 'help', data: { responseURL: channelIdWithTeam } }
   }
