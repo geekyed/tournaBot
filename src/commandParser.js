@@ -3,19 +3,21 @@ const parse = async (event) => {
   const command = event.text.split(' ')[0]
   let parameters = stripCommand(event.text)
 
+  const channelIdWithTeam = `${event.team_id}-${event.channel_id}`
+
   switch (command) {
     case 'new':
-      return parseNew(parameters, event.channel_id)
+      return parseNew(parameters, channelIdWithTeam)
     case 'current':
-      return parseCurrent(parameters, event.channel_id)
+      return parseCurrent(parameters, channelIdWithTeam)
     case 'I':
-      return parseResult(parameters, event.channel_id, event.user_id)
+      return parseResult(parameters, channelIdWithTeam, event.user_id)
     case 'players':
-      return { type: 'players', data: { players: parameters, channelID: event.channel_id } }
+      return { type: 'players', data: { players: parameters, channelID: channelIdWithTeam } }
     case 'generate':
-      return { type: 'generate', data: { channelID: event.channel_id } }
+      return { type: 'generate', data: { channelID: channelIdWithTeam } }
     default:
-      return { type: 'help', data: { responseURL: event.response_url } }
+      return { type: 'help', data: { responseURL: channelIdWithTeam } }
   }
 }
 
