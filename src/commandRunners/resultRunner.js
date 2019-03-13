@@ -32,20 +32,8 @@ const execute = async (data) => {
 const processMatch = async (match, round, myTournament, p1Score, p2Score) => {
   setScores(match, p1Score, p2Score)
   setPoints(match, round)
-
-  administerRound(myTournament, round)
-  await tournament.set(myTournament)
-}
-
-const administerRound = (myTournament, round) => {
   round.started = true
-
-  const roundComplete = round.matches.every( m => m.completed )
-  if (roundComplete) {
-    if (myTournament.currentRound < determineTotalRounds(myTournament.players.length)) myTournament.currentRound++ 
-    // else tournament finished
-  }
-
+  await tournament.set(myTournament)
 }
 
 const setPoints = (match, round) => {

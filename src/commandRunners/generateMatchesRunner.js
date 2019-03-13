@@ -1,9 +1,9 @@
 const tournament = require('../dataAccess/tournament')
 const currentTournament = require('../dataAccess/currentTournament')
+const { collateTotalScores } = require('./helpers/collateTotalScores')
 
 const execute = async (data) => {
   const tournamentChannelLink = await currentTournament.get(data.channelID)
-
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
   if (isRoundStarted(myTournament)) {
@@ -11,7 +11,9 @@ const execute = async (data) => {
   }
 
   let round = initialiseRound(myTournament)
-  let totalScores = collateTotalScore(myTournament)
+  let totalScores = collateTotalScores(myTournament)
+  if (myTournament.currentRound === 1) totalScores.sort(() => {return 0.5 - Math.random()}) //Randomise the first round.
+
   let matchesString = `Round ${myTournament.currentRound} matches generated!\n`
 
   while (totalScores.length !== 0) {
@@ -76,16 +78,5 @@ const createMatch = (player1name, player2Name) => {
   }
 }
 
-const collateTotalScore = (myTournament) => {
-  let totalScores = []
-  for (let i in myTournament.players) {
-    let points = 0
-    for (let j in myTournament.rounds) {
-      points += myTournament.rounds[j].points[myTournament.players[i]]
-    }
-    totalScores.push({ name: myTournament.players[i], points })
-  }
-  return myTournament.currentRound !== 1 ? totalScores.sort((a, b) => a.points - b.points) : totalScores.sort(() => {return 0.5 - Math.random()})
-}
 
 module.exports = { execute }
