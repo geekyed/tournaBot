@@ -7,6 +7,8 @@ const execute = async (data) => {
 
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
+  if (myTournament.type != 'swiss') return 'Only swiss tournamnents have points.'
+
   let totalScores = collateTotalScores(myTournament).reverse()
 
   let pointsResponse = 'Current points standings:\n\n'

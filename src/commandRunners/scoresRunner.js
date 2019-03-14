@@ -6,7 +6,7 @@ const execute = async (data) => {
 
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
-  let scoresString = 'Scores!\n'
+  let scoresString = ''
 
   myTournament.rounds.forEach((round, i) => {
     scoresString += getRoundScoresString(round, i)
@@ -16,7 +16,7 @@ const execute = async (data) => {
 
 const getRoundScoresString = (round, i) => {
   let roundScores = ` Round: ${i + 1}\n`
-  round.matches.forEach( ( match, j) => {
+  round.matches.forEach( match => {
     roundScores += `    ${match.player1} ${match.score.player1} - ${match.score.player2} ${match.player2}\n`
   })
   return roundScores
