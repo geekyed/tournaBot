@@ -36,6 +36,7 @@ const collateTotalScores = (tournament) => {
 
   tournament.players.forEach( name => {
     let oppMatchWinPerc = 0
+    let oppGameWinPerc = 0
     
     // If we have faced an opponent (avoids /0 errors)
     if (opponents[name].length > 0) {

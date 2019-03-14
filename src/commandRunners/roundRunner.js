@@ -25,7 +25,7 @@ const execute = async (data) => {
     response += await generateMatchesRunner.execute(data)
     return response
   }
-  return 'Round not incremented.'
+  return 'It doesnt look like the current round has finished!'
 }
 
 module.exports = { execute }
