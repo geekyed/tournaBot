@@ -53,8 +53,8 @@ const setPoints = (match, round) => {
 }
 
 const setScores = (match, p1Score, p2Score) => {
-  match.score.player1 = p1Score
-  match.score.player2 = p2Score
+  match.score.player1 = Number(p1Score)
+  match.score.player2 = Number(p2Score)
   match.completed = true
 }
 

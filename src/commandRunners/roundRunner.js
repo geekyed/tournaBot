@@ -11,7 +11,7 @@ const execute = async (data) => {
   let round = myTournament.rounds[myTournament.currentRound - 1]
 
   if (round.matches.every( m => m.completed )) {
-    let response = `Round ${myTournament.currentRound - 1} Ended.\n\n`
+    let response = `Round ${myTournament.currentRound} Ended.\n\n`
 
     if (myTournament.currentRound === determineTotalRounds(myTournament.players.length)) {
       response += 'The tournament has finished!\n\n'

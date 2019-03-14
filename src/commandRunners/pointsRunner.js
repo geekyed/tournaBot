@@ -7,10 +7,10 @@ const execute = async (data) => {
 
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
-  let totalScores = collateTotalScores(myTournament).sort((a, b) => b.points - a.points)
+  let totalScores = collateTotalScores(myTournament).reverse()
 
   let pointsResponse = 'Current points standings:\n\n'
-  totalScores.forEach(score => pointsResponse += `${score.points}pts ${score.name}\n`)
+  totalScores.forEach(score => pointsResponse += `${score.points}pts Opponent Win ${Math.round(score.oppMatchWinPerc)}\%  Game Win ${Math.round(score.gameWinPerc)}\% ${score.name}\n`)
 
   return pointsResponse
 }
