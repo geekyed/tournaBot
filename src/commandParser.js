@@ -76,21 +76,24 @@ const parseResult = (parameters, channelID, userID) => {
 
 const parseCurrent = (parameters, channelID) => {
   try {
-    return { type: 'current', data: { tournamentName: parameters[0], channelID } }
+    return { type: 'current', data: { name: parameters[0], channelID } }
   } catch (err) {
     return { error: 'current command invalid' }
   }
 }
 
 const parseNew = (parameters, channelID) => {
-  let tournamentName = null
+  let name = null
+  let type = null
   try {
-    tournamentName = parameters[0]
-    if (!/\S/.test(tournamentName)) return { error: 'name not found' }
+    name = parameters[0]
+    type = parameters[1]
+    if (type !== 'swiss' && type !== 'knockout') return { error: 'Invalid tournament type,' }
+    if (!/\S/.test(name)) return { error: 'name not found,' }
   } catch (err) {
-    return { error: 'new command invalid' }
+    return { error: 'new command invalid,' }
   }
-  return { type: 'newTournament', data: { tournamentName, channelID } }
+  return { type: 'newTournament', data: { name, channelID, type } }
 }
 
 const isNormalInteger = (str) => {

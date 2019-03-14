@@ -6,6 +6,18 @@ const execute = async (data) => {
   const tournamentChannelLink = await currentTournament.get(data.channelID)
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
+  switch (myTournament.type) {
+    case 'swiss':
+      return await generateSwissRound(myTournament)
+    case 'knockout':
+      return 'not implemented yet!'
+    default:
+      break;
+  }
+  
+}
+
+const generateSwissRound = async (myTournament) => {
   if (isRoundStarted(myTournament)) {
     throw new Error('You cannot regenerate a round once a match has been played.')
   }
@@ -32,7 +44,6 @@ const execute = async (data) => {
 }
 
 const getPlayer2 = (player1, totalScores, rounds) => {
-
   // P1 is last in the bunch so gets a bye.
   if (totalScores.length === 0) return { name: 'Bye', points: 0 }
   

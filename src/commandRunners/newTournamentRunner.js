@@ -4,14 +4,15 @@ const currentTournamentRunner = require('./currentTournamentRunner')
 
 const execute = async (data) => {
   const newTournament = { 
-    tournamentName: data.tournamentName,
+    tournamentName: data.name,
     currentRound: 1,
-    rounds: []
+    rounds: [],
+    type: data.type
   }
 
   await tournament.set(newTournament)
   await currentTournamentRunner.execute(data)
-  return `${data.tournamentName} tournament started and set as current tournament for this channel.`
+  return `${data.name} tournament started and set as current tournament for this channel.`
 }
 
 module.exports = { execute }
