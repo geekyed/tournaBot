@@ -13,9 +13,15 @@ const execute = async (data) => {
   if (round.matches.every( m => m.completed )) {
     let response = `Round ${myTournament.currentRound} Ended.\n\n`
 
-    if (myTournament.currentRound === determineTotalRounds(myTournament.players.length)) {
+    if (myTournament.type === 'swiss' &&  myTournament.currentRound === determineTotalRounds(myTournament.players.length)) {
       response += 'The tournament has finished!\n\n'
       response += await pointsRunner.execute(data)
+      return response
+    }
+
+    if (myTournament.type === 'knockout' && myTournament.players.length === 1) {
+      response += 'The tournament has finished!\n\n'
+      response += `${myTournament.players[0]} is our Winner!`
       return response
     }
 
