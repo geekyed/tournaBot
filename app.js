@@ -7,6 +7,7 @@ const resultRunner = require('./src/commandRunners/resultRunner')
 const scoresRunner = require('./src/commandRunners/scoresRunner')
 const pointsRunner = require('./src/commandRunners/pointsRunner')
 const roundRunner = require('./src/commandRunners/roundRunner')
+const tiebreakRunner = require('./src/commandRunners/tiebreakRunner')
 const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/response')
 
 const commandRunners = {
@@ -17,7 +18,8 @@ const commandRunners = {
   'result': resultRunner,
   'scores': scoresRunner,
   'points': pointsRunner,
-  'round': roundRunner
+  'round': roundRunner,
+  'tiebreak': tiebreakRunner
 }
 
 exports.handler = async (event) => {

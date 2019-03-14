@@ -24,6 +24,8 @@ const parse = async (event) => {
       return { type: 'round', data: { channelID: channelIdWithTeam } }
     case 'help':
       return { type: 'help' }
+    case 'tiebreak':
+      return { type: 'tiebreak' }
     default:
       return { error: 'command not found' }
   }
