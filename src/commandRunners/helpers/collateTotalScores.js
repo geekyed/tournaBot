@@ -40,18 +40,23 @@ const collateTotalScores = (tournament) => {
     // If we have faced an opponent (avoids /0 errors)
     if (opponents[name].length > 0) {
       let oppMatchWinTot = 0
-      opponents[name].forEach( opponent => oppMatchWinTot += matchWinPercentage[opponent] )
+      let oppGameWinTot = 0
+      opponents[name].forEach( opponent => { 
+        oppMatchWinTot += matchWinPercentage[opponent] 
+        oppGameWinTot += gameWinPercentage[opponent]
+      })
       console.log(`${name} opponents MWT: ${oppMatchWinTot} num opponents: ${opponents[name].length}`)
       oppMatchWinPerc = oppMatchWinTot / opponents[name].length
+      oppGameWinPerc = oppGameWinTot / opponents[name].length
     }
-    totalScores.push({ name, points: points[name], oppMatchWinPerc, gameWinPerc: gameWinPercentage[name] })
+    totalScores.push({ name, points: points[name], oppMatchWinPerc, gameWinPerc: gameWinPercentage[name], oppGameWinPerc })
   })
 
   return totalScores.sort((a, b) => {
     if (a.points === b.points) {
       if (a.oppMatchWinPerc === b.oppMatchWinPerc) {
         if (a.gameWinPerc === b.gameWinPerc) {
-          return 0
+          return a.oppGameWinPerc - b.oppGameWinPerc
         }
         return a.gameWinPerc - b.gameWinPerc
       }
