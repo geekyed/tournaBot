@@ -22,7 +22,7 @@ const parse = async (event) => {
       return { type: 'points', data: { channelID: channelIdWithTeam } }
     case 'round':
       return { type: 'round', data: { channelID: channelIdWithTeam } }
-    case 'round':
+    case 'help':
       return { type: 'help' }
     default:
       return { error: 'command not found' }
