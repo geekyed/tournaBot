@@ -17,11 +17,11 @@ const collateTotalScores = (tournament) => {
       gamesPlayed += match.score.player1 + match.score.player2
       if (match.player1 === name) {
         gamePoints += (3 * match.score.player1)
-        opponents[name].push(match.player2)
+        if (match.player2 != 'Bye') opponents[name].push(match.player2)
       }
       if (match.player2 === name) {
         gamePoints += (3 * match.score.player2)
-        opponents[name].push(match.player1)
+        if (match.player2 != 'Bye') opponents[name].push(match.player1)
       }
       //  Drawn last game assumed if 1-1
       if (match.score.player1 === match.score.player2) {
@@ -29,14 +29,21 @@ const collateTotalScores = (tournament) => {
         gamesPlayed += 1
       }
     })
-    matchWinPercentage[name] = (points[name] / (tournament.rounds.length * 3)) * 100 
+    // Lowest win %age is 33% to even out low scoring players - https://www.wizards.com/dci/downloads/tiebreakers.pdf
+    matchWinPercentage[name] = Math.max((points[name] / (tournament.rounds.length * 3)), 0.33) * 100 
     gameWinPercentage[name] = (gamePoints / (gamesPlayed * 3)) * 100
   })
 
   tournament.players.forEach( name => {
-    let oppMatchWinTot = 0
-    opponents[name].forEach( opponent => oppMatchWinTot += matchWinPercentage[opponent] )
-    const oppMatchWinPerc = oppMatchWinTot / opponents[name].length
+    let oppMatchWinPerc = 0
+    
+    // If we have faced an opponent (avoids /0 errors)
+    if (opponents[name].length > 0) {
+      let oppMatchWinTot = 0
+      opponents[name].forEach( opponent => oppMatchWinTot += matchWinPercentage[opponent] )
+      console.log(`${name} opponents MWT: ${oppMatchWinTot} num opponents: ${opponents[name].length}`)
+      oppMatchWinPerc = oppMatchWinTot / opponents[name].length
+    }
     totalScores.push({ name, points: points[name], oppMatchWinPerc, gameWinPerc: gameWinPercentage[name] })
   })
 
