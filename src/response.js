@@ -38,7 +38,11 @@ const createHelpResponse = () => {
 const helpText = '*new*: Create a new tournament. `/tournaBot new <name>` \n' +
 '*current*: Set the current tournament `/tournaBot current <name>`\n' +
 '*players*: Add new players `/tournaBot players @edward.weston @david.hackman`\n' +
-'*generate*: Generate pairings for the round `/tournaBot generate`\n' +
-'*I*: Record results a `/tournaBot I won 2-0` or `/tournaBot I lost 2-1` or \n'
+'*start*: Start the tournament `/tournaBot start`\n' +
+'*I*: Record results a `/tournaBot I won 2-0` or `/tournaBot I lost 2-1` or I drew 1-1 \n' +
+'*round*: Finish this round (requires all matches to be complete) and pair the next, or get the final scores! \n' +
+'*points*: Find out the current points standings. \n' +
+'*scores*: Get the full scores breakdown. \n' +
+'*tiebreak*: Explain the tie break numbers. \n'
 
 module.exports = { createErrorResponse, createSuccessResponse, createHelpResponse }
