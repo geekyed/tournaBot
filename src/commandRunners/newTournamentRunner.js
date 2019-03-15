@@ -3,7 +3,6 @@ const tournament = require('../dataAccess/tournament')
 const currentTournamentRunner = require('./currentTournamentRunner')
 
 const execute = async (data) => {
-
   const currentTournament = await tournament.get(data.name)
 
   if (currentTournament) return `${data.name} tournament already exists, choose a different name or talk to an admin.`
