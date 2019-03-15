@@ -5,12 +5,12 @@ const parse = async (event) => {
 
   const channelIdWithTeam = `${event.team_id}-${event.channel_id}`
 
-  switch (command) {
+  switch (command.toLowerCase()) {
     case 'new':
       return parseNew(parameters, channelIdWithTeam)
     case 'current':
       return parseCurrent(parameters, channelIdWithTeam)
-    case 'I':
+    case 'i':
       return parseResult(parameters, channelIdWithTeam, event.user_id)
     case 'players':
       return { type: 'players', data: { players: parameters, channelID: channelIdWithTeam } }
