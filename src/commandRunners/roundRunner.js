@@ -8,6 +8,8 @@ const execute = async (data) => {
   const tournamentChannelLink = await currentTournament.get(data.channelID)
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
+  if (myTournament.rounds.length === 0) return `The tournament ${myTournament.tournamentName} hasn't been started yet!`
+
   let round = myTournament.rounds[myTournament.currentRound - 1]
 
   if (round.matches.every( m => m.completed )) {
