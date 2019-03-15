@@ -16,10 +16,10 @@ const execute = async (data) => {
   switch (myTournament.type) {
     case 'swiss':
       round = generateSwissRound(myTournament)
+      break
     case 'knockout':
       round = generateKnockoutRound(myTournament)
-    default:
-      break;
+      break
   }
 
   myTournament.rounds[myTournament.currentRound - 1] = round

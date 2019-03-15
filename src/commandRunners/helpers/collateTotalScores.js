@@ -46,7 +46,6 @@ const collateTotalScores = (tournament) => {
         oppMatchWinTot += matchWinPercentage[opponent] 
         oppGameWinTot += gameWinPercentage[opponent]
       })
-      console.log(`${name} opponents MWT: ${oppMatchWinTot} num opponents: ${opponents[name].length}`)
       oppMatchWinPerc = oppMatchWinTot / opponents[name].length
       oppGameWinPerc = oppGameWinTot / opponents[name].length
     }
