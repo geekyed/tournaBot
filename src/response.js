@@ -27,7 +27,6 @@ const createHelpResponse = () => {
     response_type: 'ephemeral',
     blocks: [
       {
-        color: '#4dc6ff',
         type: 'section',
         text: {
           'type': 'mrkdwn',
