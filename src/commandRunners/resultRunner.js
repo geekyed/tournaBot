@@ -1,6 +1,7 @@
 const tournament = require('../dataAccess/tournament')
 const currentTournament = require('../dataAccess/currentTournament')
 
+
 const Win = 3
 const Draw = 1
 const Lose = 0
@@ -16,14 +17,9 @@ const execute = async (data) => {
   for (let i in round.matches) {
     let match = round.matches[i]
 
-    if (match.player1.includes(data.userID)) {
-      await processMatch(match, round, myTournament, data.score.user, data.score.opponent)
-      return `Result saved: ${match.player1} ${match.score.player1} - ${match.score.player2} ${match.player2}`
-    }
-    if (match.player2.includes(data.userID)) {
-      await processMatch(match, round, myTournament, data.score.opponent, data.score.user)
-      return `Result saved: ${match.player1} ${match.score.player1} - ${match.score.player2} ${match.player2}`
-    }
+    if (match.player1.includes(data.userID)) await processMatch(match, round, myTournament, data.score.user, data.score.opponent)
+    if (match.player2.includes(data.userID)) await processMatch(match, round, myTournament, data.score.opponent, data.score.user)
+    return `Result saved: ${match.player1} ${match.score.player1} - ${match.score.player2} ${match.player2}`
   }
 
   throw new Error(`no current match found in tournament: ${myTournament.tournamentName}, 

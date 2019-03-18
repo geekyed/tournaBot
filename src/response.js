@@ -25,24 +25,27 @@ const createSuccessResponse = (message) => {
 const createHelpResponse = () => {
   return {
     response_type: 'ephemeral',
-    attachments: [
+    blocks: [
       {
         color: '#4dc6ff',
-        title: 'Help!',
-        text: helpText,
-        fallback: helpText
+        type: 'section',
+        text: {
+          'type': 'mrkdwn',
+          'text': `*Help*\n ${helpText}`
+        }
       }
-    ] }
+    ]
+  }
 }
 
-const helpText = '*new*: Create a new tournament. `/tournaBot new myTournament swiss` \n' +
-'*current*: Set the current tournament `/tournaBot current myTournament`\n' +
-'*players*: Add new players `/tournaBot players @edward.weston @david.hackman`\n' +
-'*start*: Start the tournament `/tournaBot start`\n' +
-'*I*: Record results a `/tournaBot I won 2-0` or `/tournaBot I lost 2-1` or I drew 1-1 \n' +
-'*round*: Finish this round (requires all matches to be complete) and pair the next, or get the final scores! `/tournaBot round` \n' +
-'*points*: Find out the current points standings. `/tournaBot points`\n' +
-'*scores*: Get the full scores breakdown. `/tournaBot scores`\n' +
-'*tiebreak*: Explain the tie break numbers. `/tournaBot tiebreak`\n'
+const helpText = '`/tournaBot new myTournament swiss` Create a new tournament\n' +
+'`/tournaBot current myTournament` Set the current tournament\n' +
+'`/tournaBot players @edward.weston @david.hackman` Add new players\n' +
+'`/tournaBot start` Start the tournament\n' +
+'`/tournaBot I won 2-0` or `/tournaBot I lost 2-1` or `/tournaBot I drew 1-1` Record a result\n' +
+'`/tournaBot round` Finish this round (requires all matches to be complete) and pair the next, or get the final scores!\n' +
+'`/tournaBot points`Find out the current points standings\n' +
+'`/tournaBot scores` Get the full scores\n' +
+'`/tournaBot tiebreak` Explain the tie break numbers\n'
 
 module.exports = { createErrorResponse, createSuccessResponse, createHelpResponse }
