@@ -7,14 +7,14 @@ const execute = async (data) => {
 
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
 
-  if (myTournament.type != 'swiss') return 'Only swiss tournamnents have points.'
-  if (myTournament.rounds.length === 0) return `The tournament ${myTournament.tournamentName} hasn't been started yet!`
+  if (myTournament.type != 'swiss') throw new Error('Only swiss tournamnents have points.')
+  if (myTournament.rounds.length === 0) throw new Error(`The tournament ${myTournament.tournamentName} hasn't been started yet!`)
 
   let totalScores = collateTotalScores(myTournament).reverse()
 
-  let pointsResponse = 'Current points standings:\n\n'
-  totalScores.forEach(score => pointsResponse += `${score.points}pts ${score.name} (OMWP ${Math.round(score.oppMatchWinPerc)}\%  GWP ${Math.round(score.gameWinPerc)}\% OGWP ${Math.round(score.oppGameWinPerc)}\%)\n`)
+  let message = ''
+  totalScores.forEach(score => message += `${score.points}pts ${score.name} (OMWP ${Math.round(score.oppMatchWinPerc)}\%  GWP ${Math.round(score.gameWinPerc)}\% OGWP ${Math.round(score.oppGameWinPerc)}\%)\n`)
 
-  return pointsResponse
+  return { header: 'Current points standings', message }
 }
 module.exports = { execute }

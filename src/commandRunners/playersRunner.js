@@ -18,13 +18,13 @@ const execute = async (data) => {
 
   await tournament.set(myTournament)
 
-  return `Added players:${buildFormattedPlayers(data.players)}\nCurrent players:${buildFormattedPlayers(myTournament.players)}`
+  return { header: 'Added players', message: `${buildFormattedPlayers(data.players)}`}
 }
 
 const buildFormattedPlayers = (players) => {
   let formatted = ''
   players.forEach(player => {
-    formatted += ` ${player}`
+    formatted += ` ${player}\n`
   })
   return formatted
 }

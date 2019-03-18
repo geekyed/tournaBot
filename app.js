@@ -8,7 +8,7 @@ const scoresRunner = require('./src/commandRunners/scoresRunner')
 const pointsRunner = require('./src/commandRunners/pointsRunner')
 const roundRunner = require('./src/commandRunners/roundRunner')
 const tiebreakRunner = require('./src/commandRunners/tiebreakRunner')
-const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/response')
+const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/slackResponse')
 
 const commandRunners = {
   'newTournament': newTournamentRunner,
@@ -28,14 +28,12 @@ exports.handler = async (event) => {
 
   if (type === 'help') return createHelpResponse()
 
-  let result = 'no result?'
   try {
-    result = await commandRunners[type].execute(data)
+    let { header, message } = await commandRunners[type].execute(data)
+    return createSuccessResponse(header, message)
   } catch (err) {
     return handleError(err, event)
   }
-
-  return createSuccessResponse(result)
 }
 
 const handleError = (err, event) => {

@@ -25,7 +25,8 @@ const execute = async (data) => {
   myTournament.rounds[myTournament.currentRound - 1] = round
   await tournament.set(myTournament)
 
-  return await scoresRunner.execute(data)
+  let { message } = await scoresRunner.execute(data)
+  return { header: 'Round pairings generated!', message}
 }
 
 const generateKnockoutRound = (myTournament) => {

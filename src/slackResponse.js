@@ -10,16 +10,26 @@ const createErrorResponse = (err) => {
     ] }
 }
 
-const createSuccessResponse = (message) => {
+const createSuccessResponse = (header, message) => {
   return {
     response_type: 'in_channel',
-    attachments: [
+    blocks: [
       {
-        color: 'good',
-        text: message,
-        fallback: message
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: '*' + header + '*'
+        }
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: message
+        }
       }
-    ] }
+    ]
+  }
 }
 
 const createHelpResponse = () => {
@@ -29,8 +39,8 @@ const createHelpResponse = () => {
       {
         type: 'section',
         text: {
-          'type': 'mrkdwn',
-          'text': `*Help*\n ${helpText}`
+          type: 'mrkdwn',
+          text: `*Help*\n ${helpText}`
         }
       }
     ]

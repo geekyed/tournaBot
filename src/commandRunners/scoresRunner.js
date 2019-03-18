@@ -4,14 +4,14 @@ const currentTournament = require('../dataAccess/currentTournament')
 const execute = async (data) => {
   const tournamentChannelLink = await currentTournament.get(data.channelID)
   let myTournament = await tournament.get(tournamentChannelLink.tournamentName)
-  if (myTournament.rounds.length === 0) return `The tournament ${myTournament.tournamentName} hasn't been started yet!`
+  if (myTournament.rounds.length === 0) throw new Error(`The tournament ${myTournament.tournamentName} hasn't been started yet!`)
 
-  let scoresString = ''
+  let message = ''
 
   myTournament.rounds.forEach((round, i) => {
-    scoresString += getRoundScoresString(round, i)
+    message += getRoundScoresString(round, i)
   })
-  return scoresString
+  return { header: 'Scores', message } 
 }
 
 const getRoundScoresString = (round, i) => {
