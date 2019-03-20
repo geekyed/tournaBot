@@ -13,7 +13,7 @@ const execute = async (data) => {
   let totalScores = collateTotalScores(myTournament).reverse()
 
   let message = ''
-  totalScores.forEach(score => message += `${score.points}pts ${score.name} (OMWP ${Math.round(score.oppMatchWinPerc)}\%  GWP ${Math.round(score.gameWinPerc)}\% OGWP ${Math.round(score.oppGameWinPerc)}\%)\n`)
+  totalScores.forEach(score => message += `*${score.points}pts* ${score.name} (OMWP ${Math.round(score.oppMatchWinPerc)}\%  GWP ${Math.round(score.gameWinPerc)}\% OGWP ${Math.round(score.oppGameWinPerc)}\%)\n`)
 
   return { header: 'Current points standings', message }
 }

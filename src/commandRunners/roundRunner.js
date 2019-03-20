@@ -14,7 +14,10 @@ const execute = async (data) => {
 
   if (!round.matches.every( m => m.completed )) throw new Error('It doesnt look like the current round has finished!')
 
-  if (swissTournamentFinished) return { header: 'The tournament has finished!', message: await pointsRunner.execute(data) }
+  if (swissTournamentFinished) {
+    const { message } = await pointsRunner.execute(data)
+    return { header: 'The tournament has finished!', message }
+  }
   if (knockoutTournamentFinished) return { header: 'The tournament has finished!', message: `${myTournament.players[0]} is our Winner!` }
 
   myTournament.currentRound++
