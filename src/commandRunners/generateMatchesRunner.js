@@ -1,7 +1,6 @@
 const tournament = require('../dataAccess/tournament')
 const currentTournament = require('../dataAccess/currentTournament')
 const { collateTotalScores } = require('./helpers/collateTotalScores')
-const scoresRunner = require('./scoresRunner')
 
 const execute = async (data) => {
   const tournamentChannelLink = await currentTournament.get(data.channelID)
@@ -25,8 +24,7 @@ const execute = async (data) => {
   myTournament.rounds[myTournament.currentRound - 1] = round
   await tournament.set(myTournament)
 
-  let { message } = await scoresRunner.execute(data)
-  return { header: 'Round pairings generated!', message}
+  return { header: 'Round pairings generated!', message: generatePairingsString(round)}
 }
 
 const generateKnockoutRound = (myTournament) => {
@@ -76,12 +74,12 @@ const getPlayer2 = (player1, totalScores, rounds) => {
 
 const playersHavePlayed = (player1Name, player2Name, rounds) => {
   for(let i = 0; i < rounds.length; i++) {
-    if (getPlayersMatchIndexForRound(player1Name, rounds[i]) === getPlayersMatchIndexForRound(player2Name, rounds[i])) return true
+    if (getMatchIndex(player1Name, rounds[i]) === getMatchIndex(player2Name, rounds[i])) return true
   }
   return false
 }
 
-const getPlayersMatchIndexForRound = (playerName, round) => round.matches.findIndex(match => match.player1 === playerName || match.player2 === playerName)
+const getMatchIndex = (playerName, round) => round.matches.findIndex(match => match.player1 === playerName || match.player2 === playerName)
 
 const initialiseSwissRound = (myTournament) => {
   let round = { matches:[], started: false, points: {} }
@@ -106,5 +104,12 @@ const createMatch = (player1Name, player2Name) => {
   }
 }
 
+const generatePairingsString = round => {
+  pairingString = ''
+  round.matches.forEach( match => {
+    pairingString += `${match.player1} vs ${match.player2}\n`
+  })
+  return pairingString
+}
 
 module.exports = { execute }
