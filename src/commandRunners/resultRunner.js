@@ -17,23 +17,36 @@ const execute = async (data) => {
   for (let i in round.matches) {
     let match = round.matches[i]
 
-    if (match.player1.includes(data.userID)) await processMatch(match, round, myTournament, data.score.user, data.score.opponent)
-    if (match.player2.includes(data.userID)) await processMatch(match, round, myTournament, data.score.opponent, data.score.user)
-    return { header: 'Result saved', message: `${match.player1} ${match.score.player1} - ${match.score.player2} ${match.player2}` } 
+    if (match.player1.includes(data.userID)) {
+      await processMatch(match, round, myTournament, data.score.user, data.score.opponent)
+      return constructResponse(match)
+    }
+    if (match.player2.includes(data.userID)) {
+      await processMatch(match, round, myTournament, data.score.opponent, data.score.user)
+      return constructResponse(match)
+    }
   }
 
   throw new Error(`No current match found in tournament: ${myTournament.tournamentName}, 
     in channel: <#${data.channelID}> for player: <@${data.userID}>`)
 }
 
+const constructResponse = match => {
+  return { 
+    header: 'Result saved', 
+    message: `${match.player1} ${match.score.player1} - ${match.score.player2} ${match.player2}`
+  } 
+}
+
 const processMatch = async (match, round, myTournament, p1Score, p2Score) => {
+  console.log(`match processing: ${JSON.stringify(match)}`)
   setScores(match, p1Score, p2Score)
-  rersultEffects(match, round, myTournament)
+  resultEffects(match, round, myTournament)
   round.started = true
   await tournament.set(myTournament)
 }
 
-const rersultEffects = (match, round, myTournament) => {
+const resultEffects = (match, round, myTournament) => {
   if (match.score.player1 === match.score.player2) { 
     if (myTournament.type === 'swiss') {
       round.points[match.player1] = Draw
