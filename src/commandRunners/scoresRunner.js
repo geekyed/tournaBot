@@ -17,9 +17,13 @@ const execute = async (data) => {
 const getRoundScoresString = (round, i) => {
   let roundScores = ` Round: ${i + 1}\n`
   round.matches.forEach( match => {
-    roundScores += `    ${match.player1} ${match.score.player1} - ${match.score.player2} ${match.player2}\n`
+    roundScores += `    ${nameWithoutAt(match.player1)} ${match.score.player1} - ${match.score.player2} ${nameWithoutAt(match.player2)}\n`
   })
   return roundScores
+}
+
+const nameWithoutAt = player => {
+  return player.includes('@') ? player.split('|')[1].slice(0, -1) : player
 }
 
 module.exports = { execute }

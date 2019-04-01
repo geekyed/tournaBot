@@ -13,8 +13,13 @@ const execute = async (data) => {
   let totalScores = collateTotalScores(myTournament).reverse()
 
   let message = ''
-  totalScores.forEach(score => message += `*${score.points}pts* ${score.name} (OMWP ${Math.round(score.oppMatchWinPerc)}\%  GWP ${Math.round(score.gameWinPerc)}\% OGWP ${Math.round(score.oppGameWinPerc)}\%)\n`)
+  totalScores.forEach(score => message += `*${score.points}pts* *${nameWithoutAt(score.name)}* (OMWP ${Math.round(score.oppMatchWinPerc)}\%  GWP ${Math.round(score.gameWinPerc)}\% OGWP ${Math.round(score.oppGameWinPerc)}\%)\n`)
 
   return { header: 'Current points standings', message }
 }
+
+const nameWithoutAt = player => {
+  return player.includes('@') ? player.split('|')[1].slice(0, -1) : player
+}
+
 module.exports = { execute }
