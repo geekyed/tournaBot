@@ -14,11 +14,11 @@ const execute = async (data) => {
 
   if (!round.matches.every( m => m.completed )) throw new Error('It doesnt look like the current round has finished!')
 
-  if (swissTournamentFinished) {
+  if (swissTournamentFinished(myTournament)) {
     const { message } = await pointsRunner.execute(data)
     return { header: 'The tournament has finished!', message }
   }
-  if (knockoutTournamentFinished) return { header: 'The tournament has finished!', message: `${myTournament.players[0]} is our Winner!` }
+  if (knockoutTournamentFinished(myTournament)) return { header: 'The tournament has finished!', message: `${myTournament.players[0]} is our Winner!` }
 
   myTournament.currentRound++
   await tournament.set(myTournament)
@@ -27,8 +27,8 @@ const execute = async (data) => {
   return { header: `Round ${myTournament.currentRound} ended, new matches generated`, message }
 }
 
-const knockoutTournamentFinished = (myTournament) => myTournament.type === 'knockout' && myTournament.players.length === 1
+const knockoutTournamentFinished = myTournament => myTournament.type === 'knockout' && myTournament.players.length === 1
 
-const swissTournamentFinished = (myTournament) => myTournament.type === 'swiss' &&  myTournament.currentRound === determineTotalRounds(myTournament.players.length)
+const swissTournamentFinished = myTournament => myTournament.type === 'swiss' &&  myTournament.currentRound === determineTotalRounds(myTournament.players.length)
 
 module.exports = { execute }
