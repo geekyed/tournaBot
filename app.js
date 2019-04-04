@@ -8,6 +8,7 @@ const scoresRunner = require('./src/commandRunners/scoresRunner')
 const pointsRunner = require('./src/commandRunners/pointsRunner')
 const roundRunner = require('./src/commandRunners/roundRunner')
 const tiebreakRunner = require('./src/commandRunners/tiebreakRunner')
+const reminderRunner = require('./src/commandRunners/reminderRunner')
 const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/slackResponse')
 
 const commandRunners = {
@@ -19,7 +20,8 @@ const commandRunners = {
   'scores': scoresRunner,
   'points': pointsRunner,
   'round': roundRunner,
-  'tiebreak': tiebreakRunner
+  'tiebreak': tiebreakRunner,
+  'reminder': reminderRunner
 }
 
 exports.handler = async (event) => {

@@ -55,6 +55,7 @@ const helpText = '`/tournaBot new myTournament swiss` Create a new tournament\n'
 '`/tournaBot round` Finish this round (requires all matches to be complete) and pair the next, or get the final scores!\n' +
 '`/tournaBot points`Find out the current points standings\n' +
 '`/tournaBot scores` Get the full scores\n' +
-'`/tournaBot tiebreak` Explain the tie break numbers\n'
+'`/tournaBot tiebreak` Explain the tie break numbers\n' +
+'`/tournaBot reminder` Remind players that havent played their games yet to get a move on.\n'
 
 module.exports = { createErrorResponse, createSuccessResponse, createHelpResponse }

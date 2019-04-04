@@ -22,6 +22,8 @@ const parse = async (event) => {
       return { type: 'points', data: { channelID: channelIdWithTeam } }
     case 'round':
       return { type: 'round', data: { channelID: channelIdWithTeam } }
+    case 'reminder':
+      return { type: 'reminder', data: { channelID: channelIdWithTeam } }
     case 'help':
       return { type: 'help' }
     case 'tiebreak':
