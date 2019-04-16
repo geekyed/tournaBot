@@ -51,8 +51,10 @@ const resultEffects = (match, round, myTournament) => {
     if (myTournament.type === 'swiss') {
       round.points[match.player1] = Draw
       round.points[match.player2] = Draw
+      
+    } else {
+      throw new Error('You cant draw in a knockout tournament')
     }
-    throw new Error('You cant draw in a knockout tournament')
   }
 
   if (match.score.player1 > match.score.player2) {
