@@ -9,7 +9,7 @@ const pointsRunner = require('./src/commandRunners/pointsRunner')
 const roundRunner = require('./src/commandRunners/roundRunner')
 const tiebreakRunner = require('./src/commandRunners/tiebreakRunner')
 const reminderRunner = require('./src/commandRunners/reminderRunner')
-const { createErrorResponse, createSuccessResponse, createHelpResponse } = require('./src/slackResponse')
+const { createEphemeralResponse, createResponse, createHelpResponse } = require('./src/slackResponse')
 
 const commandRunners = {
   'newTournament': newTournamentRunner,
@@ -31,8 +31,8 @@ exports.handler = async (event) => {
   if (type === 'help') return createHelpResponse()
 
   try {
-    let { header, message } = await commandRunners[type].execute(data)
-    return createSuccessResponse(header, message)
+    let { header, message, imageURL } = await commandRunners[type].execute(data)
+    return createResponse(header, message, imageURL)
   } catch (err) {
     return handleError(err, event)
   }
@@ -41,5 +41,5 @@ exports.handler = async (event) => {
 const handleError = (err, event) => {
   const errText = `${err}` + ' try `/tournaBot help`'
   console.log(`ERROR: ${err}, EVENT: ${JSON.stringify(event)}`)
-  return createErrorResponse(errText)
+  return createEphemeralResponse('Error', errText)
 }

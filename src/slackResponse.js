@@ -1,50 +1,56 @@
-const createErrorResponse = (err) => {
-  return {
+const createEphemeralResponse = (header, message, imageURL) => {
+  let response =  {
     response_type: 'ephemeral',
-    attachments: [
-      {
-        color: 'danger',
-        text: err,
-        fallback: err
-      }
-    ] }
-}
-
-const createSuccessResponse = (header, message) => {
-  return {
-    response_type: 'in_channel',
-    blocks: [
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: '*' + header + '*'
-        }
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: message
-        }
-      }
-    ]
+    blocks: []
   }
+
+  return createBlocks(response, header, message, imageURL)
 }
 
 const createHelpResponse = () => {
-  return {
+  let response = {
     response_type: 'ephemeral',
-    blocks: [
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: `*Help*\n ${helpText}`
-        }
-      }
-    ]
+    blocks: []
   }
+  return createBlocks(response, 'help', helpText)
+}
+
+const createResponse = (header, message, imageURL) => {
+  let response =  {
+    response_type: 'in_channel',
+    blocks: []
+  }
+
+  return createBlocks(response, header, message, imageURL)
+}
+
+const createBlocks = (response, header, message, imageURL) => {
+  if (header) {
+    response.blocks.push({
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: '*' + header + '*'
+      }
+    })
+  }
+  if (message) {
+    response.blocks.push({
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: message
+      }
+    })
+  }
+  if (imageURL) {
+    response.blocks.push({
+      type: 'image',
+      image_url: imageURL,
+      alt_text: 'an image'
+    })
+  }
+  return response
 }
 
 const helpText = '`/tournaBot new myTournament swiss` Create a new tournament\n' +
@@ -58,4 +64,4 @@ const helpText = '`/tournaBot new myTournament swiss` Create a new tournament\n'
 '`/tournaBot tiebreak` Explain the tie break numbers\n' +
 '`/tournaBot reminder` Remind players that havent played their games yet to get a move on.\n'
 
-module.exports = { createErrorResponse, createSuccessResponse, createHelpResponse }
+module.exports = { createEphemeralResponse, createResponse, createHelpResponse }
